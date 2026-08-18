@@ -1,57 +1,75 @@
-# playlists/tracks
+Version 3.0
 
-## meta
-operationId: listPlaylistTracks
-tags: [playlists]
-deprecated: false
-summary: List playlists with their tracks
-description: Returns playlist entities with the list of belonging tracks. `track_type` selects singles, album tracks, or both — default albumtrack only, since singles leave album_* fields empty.
 
-## endpoint
-GET /playlists/tracks
+# Jamendo Api Documentation
 
-## auth
-apikey_auth
-(one of id, name, user_id, access_token, or user_name is required in addition to client_id)
+## GET [/v3.0](https://developer.jamendo.com/v3.0) [/playlists](https://developer.jamendo.com/v3.0/playlists) [/tracks](https://developer.jamendo.com/v3.0/playlists/tracks)
 
-## parameters
-| name | in | required | type | default | enum | description |
-|------|-----|----------|------|---------|------|-------------|
-| client_id | query | yes | string | - | - | app client id |
-| format | query | no | string | json | xml, json, jsonpretty | response format |
-| callback | query | no | string | - | - | JSONP callback wrapper |
-| offset | query | no | integer | - | - | pagination offset |
-| limit | query | no | string | 10 | max 200, or "all" (capped 200) | page size |
-| order | query | no | array[enum] | relevance-like default | name, id, creationdate, track_id, track_name, track_added_date, track_position | sort field(s) |
-| fullcount | query | no | boolean | false | - | adds results_fullcount to headers |
-| id | query | conditionally | array[integer] | - | - | one or more playlist id (see required-parameters note) |
-| name | query | conditionally | string | - | - | exact playlist name |
-| namesearch | query | no | string | - | - | playlist_name substring search |
-| user_id | query | conditionally | array[integer] | - | - | one or more author id |
-| access_token | query | conditionally | string | - | - | OAuth2 access token |
-| user_name | query | conditionally | string | - | - | author username |
-| datebetween | query | no | string | - | (docs say integer — likely typo, see notes) | creation date range |
-| audioformat | query | no | enum | mp31 | mp31, mp32, ogg, flac | audio format for track `audio` field |
-| track_type | query | no | array[enum] | albumtrack | single, albumtrack | track type filter |
-| imagesize | query | no | enum | - | 25,35,50,55,60,65,70,75,85,100,130,150,200,300,400,500,600 | cover px size |
-| positionbetween | query | no | string | - | int_int | filter by track position range in the playlist, both bounds required |
-| audiodlformat | query | no | enum | audioformat's value, or mp32 | mp31, mp32, ogg, flac | audio download format for `audiodownload` |
+### Description
 
-## responses
-### 200
-content-types: json, jsonpretty, xml
-Playlist fields plus nested tracks array (same track shape as albums/tracks: id, name, duration, license_ccurl, audio, audiodownload, audiodownload_allowed, etc).
+Since February 2021, a new field 'audiodownload\_allowed' is returned in this api.
+It contains a boolean to know if you can propose or not the possibility to download the track through your application.
+Indeed, now Jamendo artists can choose if they want to allow or not the download of their tracks.
+If you are already using this api, please take time to modify your code to take into account this new 'audiodownload\_allowed' value.
+Moreover, in April 2022, the content of the field 'audiodownload' returned in this api will become an empty string if 'audiodownload\_allowed' is false.
 
-### 400 / 401 / 403 / 404 / 429 / 500
-reference: $ref Error
 
-## examples
-request: `https://api.jamendo.com/v3.0/playlists/tracks/?client_id=your_client_id&format=jsonpretty&limit=2&name=Instrumental&track_type=albumtrack`
-response:
-```json
-{"headers": {"status":"success","code":0,"error_message":"","warnings":"","results_count":0}, "results": []}
+Returns playlist entity containing the list of belonging tracks.
+
+
+
+In 2015 Jamendo introduced the possibility to publish **singles**, that is tracks with no album associated. You can use the 'track\_type' parameter to get only singles, album tracks or both. By default we only return album tracks, because singles have all albums fields (album\_\*) empty, and that could easily create bugs.
+Take into account that all tracks have an 'image' associated. In the case of an album track 'image' is equivalent to 'album\_image', whereas in case of a single 'album\_image' is always empty.
+
+
+### Required parameters
+
+_client\_id && (id \|\| name \|\| user\_id \|\| access\_token \|\| user\_name)_
+
+### Parameter List
+
+| Name | Type | Description |
+| --- | --- | --- |
+| client\_id | string | A Client Id provided by [devportal.jamendo.com](https://devportal.jamendo.com/). |
+| format | enum: {xml, json, jsonpretty} | The results formatting type |
+| callback | string | Use this parameter to have the response json wrapped in a callback function (jsonp technique). Such feature is enable only for json format and GET requests; if used in combination with other formats or a not-get request, the callback parameter is simply ignored and a warning is raised |
+| offset | integer | The position to start returning results from |
+| limit | string | The max number of results to return. Default is 10 and Max is 200. Using the keyword 'all' still a max of 200 rows will be returned |
+| order | \[\]enum: {name, id, creationdate, track\_id, track\_name, track\_added\_date, track\_position} | Sort results by the queried field(s). <br>You can specify whether to follow an ascending or descending order adding the suffix \_asc or \_desc to every field (order=field\_asc). Asc is the default one. |
+| fullcount | boolean | Setting this parameter to true, the document header will be enriched with the 'results\_fullcount' value, that is, the absolute number of rows the query would return if there was no limit and offset parameter. This value is of course very useful for pagination, but please: use it only if you really need it, as it affects performances! For this performance reasons such parameter is not available in most heavy methods. |
+| id | \[\]integer | One or more playlist id |
+| name | string | An playlist name |
+| namesearch | string | Search a playlist by name (playlist\_name matching \*seachquery\*) |
+| user\_id | \[\]integer | One or more author id (without requiring any access token) |
+| access\_token | string | A valid access token corresponding to the Jamendo user you want to get data for. The authorization token is obtained through the [OAuth2 process](https://developer.jamendo.com/v3.0/oauth2). |
+| user\_name | string | One or more user name |
+| datebetween | string | Created between dates. This parameter need a value to be used for a between closed interval. The "from" and "to" parts are both mandatory, must be separated by an underscore ("\_"), and must be both integer |
+| audioformat | enum: {mp31, mp32, ogg, flac} | The audio format you wish to get in the 'audio' returned field: mp31 (96kbs), mp32 (VBR, good quality), ogg and flac are the available formats. If no 'audioformat' is declared, mp31 will be used by default. |
+| track\_type | \[\]enum: {single, albumtrack} | Select only tracks of a certain type. By default we return only albumtracks to avoid the high risk of bugging applications (especially those built before 2015, that is before the existence of singles). Using 'track\_type=single albumtrack' you will select both types |
+| imagesize | enum: {25, 35, 50, 55, 60, 65, 70, 75, 85, 100, 130, 150, 200, 300, 400, 500, 600} | The cover size in pixel (if not specified, a default one will be returned) |
+| positionbetween | string | Filter on the track position in the playlist. This parameter need a value to be used for a between closed interval. The "from" and "to" parts are both mandatory, must be separated by an underscore ("\_"), and must be both integer |
+| audiodlformat | enum: {mp31, mp32, ogg, flac} | The audio download format you wish to get in the 'audiodownload' returned field: mp31 (96kbs), mp32 (VBR, good quality), ogg and flac are the available formats. If no 'audiodlformat' is declared, the value given to 'audioformat' will be used as default, and if neither 'audioformat' is declared, 'mp32' will be the default |
+
+### Sample
+
+#### Call:
+
+```
+https://api.jamendo.com/v3.0/playlists/tracks/?client_id=your_client_id&format=jsonpretty&limit=2&name=Instrumental&track_type=albumtrack
 ```
 
-## notes
-- Live example returned zero results (name filter didn't match any playlist) — full result shape not visible in the docs sample; infer field shape from albums/tracks and artists/tracks track objects, confirm exact shape in Step 3/4.
-- `datebetween` type description says "must be both integer" — same likely doc typo noted in playlists.md.
+#### Response:
+
+`{
+"headers":{
+    "status":"success",
+    "code":0,
+    "error_message":"",
+    "warnings":"",
+    "results_count":0
+},
+"results":[\
+]
+}`
+
+[![API powered by 3scale API Management solution](https://developer.jamendo.com/images/3scale/powered_by_logo.png)](http://www.3scale.net/)

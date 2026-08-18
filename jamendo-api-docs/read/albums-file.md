@@ -1,39 +1,49 @@
-# albums/file
+Version 3.0
 
-## meta
-operationId: downloadAlbumFile
-tags: [albums]
-deprecated: false
-summary: Download an album's zip file
-description: Exception to the normal response shape — HTTP-redirects to the requested zip file URL instead of returning a document. Does not inherit parent (`albums`) parameter declarations. A not-valid request triggers an HTTP error (404 or 500), not a JSON error body. Since Apr 2022, returns 404 if `zip_allowed` is false for the requested album.
 
-## endpoint
-GET /albums/file
+# Jamendo Api Documentation
 
-## auth
-apikey_auth
+## GET [/v3.0](https://developer.jamendo.com/v3.0) [/albums](https://developer.jamendo.com/v3.0/albums) [/file](https://developer.jamendo.com/v3.0/albums/file)
 
-## parameters
-| name | in | required | type | default | enum | description |
-|------|-----|----------|------|---------|------|-------------|
-| client_id | query | yes | string | - | - | app client id |
-| id | query | yes | integer | - | - | single album id (only one; redirect semantics) |
-| audioformat | query | no | enum | - | mp3 | only mp32 (mp3 192kbps) exists today |
+### Description
 
-## responses
-### 200
-content-types: (binary redirect, not a document)
-HTTP redirect (3xx) to the zip file URL on success.
+Since February 2021, a new field called 'zip\_allowed' is returned in these api:
 
-### 404
-Album or file doesn't exist, or `zip_allowed` is false. Plain HTTP error, not the standard `Error` JSON envelope.
 
-### 500
-Malformed request. Plain HTTP error, not the standard `Error` JSON envelope.
+https://developer.jamendo.com/v3.0/albums
+https://developer.jamendo.com/v3.0/albums/tracks
+https://developer.jamendo.com/v3.0/albums/musicinfo
 
-## examples
-request: `https://api.jamendo.com/v3.0/albums/file/?client_id=your_client_id&id=1`
-response: HTTP redirect to the album zip file on success; HTTP 404/500 on failure.
+It contains a boolean to know if you can propose or not the possibility to download the track through your application.
+Indeed, now Jamendo artists can choose if they want to allow or not the download of their albums.
+If you are already using this api ( [/v3.0/albums/file](https://developer.jamendo.com/v3.0/albums/file)), please take time to modify your code to take into account this new 'zip\_allowed' value.
+Moreover, in April 2022, the api [/v3.0/albums/file](https://developer.jamendo.com/v3.0/albums/file) will start returning 404 error if 'zip\_allowed' is false for the album you are trying to download.
 
-## notes
-- Does NOT use the shared `Error` schema for its error responses — plain HTTP error codes with a differently-shaped body. Confirm exact 404/500 body shape in Step 3 (live spot-check) before modeling `responses` for this path.
+
+The 'file' method represent an exception to the norm. Instead of returning a document object, here we http-redirect to the requested file url, in order to let your application download a certain resource. Note that here we don't inherit parent params declarations as usual, and that a not valid request will trigger an http error (404 or 500)
+
+### Required parameters
+
+_client\_id && id_
+
+### Parameter List
+
+| Name | Type | Description |
+| --- | --- | --- |
+| client\_id | string | A Client Id provided by [devportal.jamendo.com](https://devportal.jamendo.com/). |
+| audioformat | enum: {mp3} | The audio format you wish to use on the fileurl returned field. At the moment mp32 (mp3 192kbps) is the only existing format. |
+| id | integer | Applying a redirection this method accepts and needs only one album id |
+
+### Sample
+
+#### Call:
+
+```
+https://api.jamendo.com/v3.0/albums/file/?client_id=your_client_id&id=1
+```
+
+#### Response:
+
+`(If the request is successfull you should be redirected to the requested file, but if the resource doesn't exists a 404 http error with an corresponding error message will be notified in the header. In case of malformed requests, you would receive an http code 500 with relative error information`
+
+[![API powered by 3scale API Management solution](https://developer.jamendo.com/images/3scale/powered_by_logo.png)](http://www.3scale.net/)

@@ -1,65 +1,35 @@
-# Response Codes
+Version 3.0
 
-Source: https://developer.jamendo.com/v3.0/response-codes
 
-## headers shape
+## Jamendo Api Response Codes
 
-Every response document contains a `headers` object with 4 fields:
+Every call returns a document containing headers and results. The headers are composed of four fields:
 
-| field | description |
-|-------|-------------|
-| status | `"success"` or `"failed"` |
-| code | `0` on success, non-zero error id on failure (see table below) |
-| error_message | error type + contextual description, empty on success |
-| warnings | warning messages if any; warnings do not fail the request |
-
-## error code table
+- _status_: it can be either 'succeed' or 'failed'
+- _code_: will be 0 in case of a success or an error Id (different then zero) in case of a fail. All the information you need is in the table below.
+- _error\_message_: contains the error message if an error occured else it is empty. Every error message will contain the _type_ of the error (see in table below) as well as the contextual error description
+- _warnings_: may contain warning messages if any. Warnings get raised, but do not let the request fail.
 
 | code | type | description |
-|------|------|-------------|
+| --- | --- | --- |
 | 0 | Success | Success (or success with warning) |
-| 1 | Exception | Generic unidentified error |
-| 2 | Http Method | HTTP method not supported for this method |
-| 3 | Type | A parameter value doesn't respect type/range/format requirements |
-| 4 | Required Parameter | A required parameter was missing or empty |
-| 5 | Invalid Client Id | client_id doesn't exist or can't be validated |
-| 6 | Rate Limit Exceeded | App or IP exceeded permitted rate limit |
-| 7 | Method Not Found | entity/subentity path doesn't exist |
-| 8 | Needed Parameter | A conditionally-required parameter missing or invalid |
-| 9 | Format | Unknown output format requested |
-| 10 | Entry Point | IP and/or port not recognized as a valid entry point |
-| 11 | Suspended Application | Client application suspended (illegal usage, etc) |
-| 12 | Access Token | Invalid access token |
-| 13 | Insufficient Scope | Access token lacks required scope |
-| 21 | Invalid User | Some user parameter is invalid |
-| 22 | Email Already Exist | Email already used by another user |
-| 23 | Duplicate Value | Attempted to write/update a value that must be unique |
-| 24 | Invalid Playlist | Invalid playlist id |
-| 101 | Access Code | Access code invalid, or subscription not active |
+| 1 | Exception | A generic not well identificated error occurred |
+| 2 | Http Method | The received http method is not supported for this method |
+| 3 | Type | One of the received parameters has a value not respecting requirements such as type, range, format, etc |
+| 4 | Required Parameter | A required parameter was not been received, or it was empty |
+| 5 | Invalid Client Id | The client Id received does not exists or cannot be validated |
+| 6 | Rate Limit Exceeded | This requester app or the requester IP have exceeded the permitted rate limit |
+| 7 | Method Not Found | Jamendo Api rest-like reading methods are in the format api.jamendo.com/version/entity/subentity (subentity is optional). This exception is raised when entity and/or subentity methods don't exist |
+| 8 | Needed Parameter | A parameter needed because of an imposed local condition was not received or/and has not the needed value |
+| 9 | Format | This exception is raised when the api call requests an unkown output format |
+| 10 | Entry Point | The used IP and/or port is not recognized as valid entry point |
+| 11 | Suspended Application | The client application has been suspended (illegal usage, ...) |
+| 12 | Access Token | Invalid Access Token. |
+| 13 | Insufficient Scope | Insufficient scope. The request requires higher privileges than provided by the access token |
+| 21 | Invalid User | Some parameters of User is not valid. |
+| 22 | Email Already Exist | The email is already used by another user. |
+| 23 | Duplicate Value | This error is raised when a client tries to write or update a value which already exists and cannot be duplicated |
+| 24 | Invalid Playlist | Check your playlist id. |
+| 101 | Access Code | Please check if you have correctly typed in your access code and if your subscription is still marked as being active in your client space. |
 
-## for openapi generation
-
-Shared `Error` schema (used by all endpoints' 4xx/5xx responses):
-
-```yaml
-Error:
-  type: object
-  properties:
-    headers:
-      type: object
-      properties:
-        status: { type: string, enum: [success, failed] }
-        code: { type: integer }
-        error_message: { type: string }
-        warnings: { type: string }
-    results:
-      type: array
-      items: {}
-```
-
-## notes
-
-- Jamendo returns HTTP 200 with `headers.status: "failed"` for most API-level
-  errors rather than a non-200 HTTP status — confirm this against the live
-  API in Step 3 (project-plan.md) before locking down `responses` status
-  codes in the spec.
+[![API powered by 3scale API Management solution](https://developer.jamendo.com/images/3scale/powered_by_logo.png)](http://www.3scale.net/)

@@ -1,51 +1,48 @@
-# setuser/dislike
+Version 3.0
 
-## meta
-operationId: setUserDislike
-tags: [setuser]
-deprecated: false
-summary: Dislike a track as the authenticated user
-description: Counterpart to setuser/like — lets the authenticated user dislike a track, similar to like/dislike patterns on other social platforms.
 
-## endpoint
-POST /setuser/dislike
+# Jamendo Api Documentation
 
-## auth
-oauth2
-scopes: [music]
+## POST [/v3.0](https://developer.jamendo.com/v3.0)/setuser [/dislike](https://developer.jamendo.com/v3.0/setuser/dislike)
 
-## request_body
-| name | required | type | default | enum | description |
-|------|----------|------|---------|-------|-------------|
-| client_id | yes | string | - | - | app client id |
-| format | no | string | json | xml, json, jsonpretty | response format |
-| fullcount | no | boolean | false | - | adds results_fullcount to headers |
-| access_token | yes | string | - | - | OAuth2 access token with `music` scope |
-| track_id | yes | integer | - | - | track to dislike |
+### Description
 
-## parameters
-| name | in | required | type | default | enum | description |
-|------|-----|----------|------|---------|------|-------------|
-| (none — all fields sent as POST body per docs' curl sample) | | | | | | |
+As youtube and many other social web site, on Jamendo is possible to 'like' a track, but also to 'dislike' a track. This method allow you to such an action.
 
-## responses
-### 200
-content-types: json, jsonpretty, xml
-Empty `results: []` on success.
+### Required parameters
 
-### 400 / 401 / 403 / 404 / 429 / 500
-reference: $ref Error
+_client\_id && access\_token && track\_id_
 
-## examples
-request:
+### Parameter List
+
+| Name | Type | Description |
+| --- | --- | --- |
+| client\_id | string | A Client Id provided by [devportal.jamendo.com](https://devportal.jamendo.com/) |
+| format | enum: {xml, json, jsonpretty} | The results formatting type |
+| fullcount | boolean | Setting this parameter to true, the document header will be enriched with the 'results\_fullcount' value, that is, the absolute number of rows the query would return if there was no limit and offset parameter. This value is of course very useful for pagination, but please: use it only if you really need it, as it affects performances! For this performance reasons such parameter is not available in most heavy methods. |
+| access\_token | string | A valid access token (with **'music' scope authorized**) corresponding to the Jamendo user you want to update. You can get it with the [OAuth2 process](https://developer.jamendo.com/v3.0/oauth2) |
+| track\_id | integer |  |
+
+### Sample
+
+#### Call:
+
 ```
-curl -X POST -d client_id="your_client_id" -d format="jsonpretty" -d access_token="your_access_token" -d track_id="10" "https://api.jamendo.com/v3.0/setuser/dislike/"
-```
-response:
-```json
-{"headers": {"status":"success","code":0,"error_message":"","warnings":"","results_count":0}, "results": []}
+curl -X POST  -d client_id="your_client_id"  -d format="jsonpretty"  -d access_token="your_access_token"  -d track_id="10"  "https://api.jamendo.com/v3.0/setuser/dislike/"
 ```
 
-## notes
-- Same POST-body-vs-query-string ambiguity as setuser/fan — confirm in Step 3/4.
-- Unlike setuser/like's read-side exposure (`/users/tracks?relation=like`), no corresponding `dislike` relation is documented on `/users/tracks` — confirm whether disliked tracks are queryable anywhere, or whether this is write-only with no read surface.
+#### Response:
+
+`{
+"headers":{
+    "status":"success",
+    "code":0,
+    "error_message":"",
+    "warnings":"",
+    "results_count":0
+},
+"results":[\
+]
+}`
+
+[![API powered by 3scale API Management solution](https://developer.jamendo.com/images/3scale/powered_by_logo.png)](http://www.3scale.net/)

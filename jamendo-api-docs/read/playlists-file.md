@@ -1,39 +1,36 @@
-# playlists/file
+Version 3.0
 
-## meta
-operationId: downloadPlaylistFile
-tags: [playlists]
-deprecated: false
-summary: Download a playlist's zip file
-description: Exception to the normal response shape — HTTP-redirects to the requested zip file URL instead of returning a document. Does not inherit parent (`playlists`) parameter declarations. A not-valid request triggers an HTTP error (404 or 500), not a JSON error body.
 
-## endpoint
-GET /playlists/file
+# Jamendo Api Documentation
 
-## auth
-apikey_auth
+## GET [/v3.0](https://developer.jamendo.com/v3.0) [/playlists](https://developer.jamendo.com/v3.0/playlists) [/file](https://developer.jamendo.com/v3.0/playlists/file)
 
-## parameters
-| name | in | required | type | default | enum | description |
-|------|-----|----------|------|---------|------|-------------|
-| client_id | query | yes | string | - | - | app client id |
-| id | query | yes | integer | - | - | single playlist id (only one; redirect semantics) |
-| audioformat | query | no | enum | - | mp3 | only mp32 (mp3 192kbps) exists today |
+### Description
 
-## responses
-### 200
-content-types: (binary redirect, not a document)
-HTTP redirect (3xx) to the zip file URL on success.
+The 'file' method represent an exception to the norm. Instead of returning a document object, here we http-redirect to the requested file url, in order to let your application download a certain resource. Note that here we don't inherit parent params declarations as usual, and that a not valid request will trigger an http error (404 or 500)
 
-### 404
-Playlist or file doesn't exist. Plain HTTP error, not the standard `Error` JSON envelope.
+### Required parameters
 
-### 500
-Malformed request. Plain HTTP error, not the standard `Error` JSON envelope.
+_client\_id && id_
 
-## examples
-request: `https://api.jamendo.com/v3.0/playlists/file/?client_id=your_client_id&id=1`
-response: HTTP redirect to the playlist zip file on success; HTTP 404/500 on failure.
+### Parameter List
 
-## notes
-- Same shape as albums/file — plain HTTP error responses, not the shared `Error` schema. Confirm exact body in Step 3.
+| Name | Type | Description |
+| --- | --- | --- |
+| client\_id | string | A Client Id provided by [devportal.jamendo.com](https://devportal.jamendo.com/). |
+| audioformat | enum: {mp3} | The audio format you wish to use on the fileurl returned field. At the moment mp32 (mp3 192kbps) is the only existing format. |
+| id | integer | Applying a redirection this method accepts and needs only one album id |
+
+### Sample
+
+#### Call:
+
+```
+https://api.jamendo.com/v3.0/playlists/file/?client_id=your_client_id&id=1
+```
+
+#### Response:
+
+`(If the request is successfull you should be redirected to the requested file, but if the resource doesn't exists a 404 http error with an corresponding error message will be notified in the header. In case of malformed requests, you would receive an http code 500 with relative error information`
+
+[![API powered by 3scale API Management solution](https://developer.jamendo.com/images/3scale/powered_by_logo.png)](http://www.3scale.net/)
