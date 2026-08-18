@@ -10,14 +10,17 @@ either spec should trace back to a line in a file here.
 ```
  1. FETCH (mechanical, no LLM)
     scripts/fetch-docs.sh calls the Firecrawl API for each known doc URL,
-    gets back raw markdown, saves it to a temp/raw location.
+    gets back raw markdown, saves it to docs/.raw/ (gitignored staging
+    area — never docs/read or docs/write directly, that would overwrite
+    already-normalized files on a rerun).
     Needs: FIRECRAWL_API_KEY env var.
 
  2. NORMALIZE (needs an LLM — Claude Code)
-    Claude Code reads each raw fetched page and rewrites it into this
-    directory's strict template (below). This step requires judgment —
-    picking which table is "the parameters," which prose sentence is
-    "the description," etc. — so it's not scripted.
+    Claude Code reads each raw fetched page under docs/.raw/ and rewrites
+    it into this directory's strict template (below), saving the result
+    into docs/read/ or docs/write/. This step requires judgment — picking
+    which table is "the parameters," which prose sentence is "the
+    description," etc. — so it's not scripted.
 
  3. GENERATE (needs an LLM — two independent passes)
     Claude Code reads every file under docs/ and generates:

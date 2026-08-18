@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Fetches the known Jamendo API doc pages via Firecrawl's /v1/scrape endpoint
-# and writes each page's markdown to docs/read/<slug>.md or docs/write/<slug>.md.
+# and writes each page's raw markdown to docs/.raw/read/<slug>.md or
+# docs/.raw/write/<slug>.md -- a staging area, NOT the normalized docs/read
+# and docs/write directories.
 #
 # Requires: FIRECRAWL_API_KEY (get one at https://firecrawl.dev)
 # Requires: curl, jq
@@ -8,7 +10,10 @@
 # This step is purely mechanical -- fetch raw page content, save to disk.
 # No LLM involved. The raw files here are NOT yet in the repo's markdown
 # template; that normalization is a separate, LLM-driven step (see
-# project-plan.md Step 1, and docs/README.md in this directory).
+# project-plan.md Step 1, and docs/README.md in this directory) that reads
+# docs/.raw/ and writes the normalized result into docs/read/ and
+# docs/write/. Writing raw output directly into docs/read or docs/write
+# would silently overwrite already-normalized files on a rerun.
 
 set -euo pipefail
 
@@ -18,12 +23,12 @@ if [[ -z "${FIRECRAWL_API_KEY:-}" ]]; then
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DOCS_DIR="$SCRIPT_DIR/../docs"
+RAW_DIR="$SCRIPT_DIR/../docs/.raw"
 BASE_URL="https://developer.jamendo.com/v3.0"
 
-mkdir -p "$DOCS_DIR/read" "$DOCS_DIR/write"
+mkdir -p "$RAW_DIR/read" "$RAW_DIR/write"
 
-# path -> output file (relative to docs/), one per line
+# path -> output file (relative to docs/.raw/), one per line
 PAGES=(
   "docs 00-introduction.md"
   "authentication 01-authentication.md"
@@ -64,9 +69,9 @@ for entry in "${PAGES[@]}"; do
   path="${entry%% *}"
   out="${entry#* }"
   url="$BASE_URL/$path"
-  dest="$DOCS_DIR/$out"
+  dest="$RAW_DIR/$out"
 
-  echo "fetching $url -> docs/$out"
+  echo "fetching $url -> docs/.raw/$out"
 
   response="$(curl -sS -X POST https://api.firecrawl.dev/v1/scrape \
     -H "Authorization: Bearer $FIRECRAWL_API_KEY" \
@@ -82,5 +87,6 @@ for entry in "${PAGES[@]}"; do
   echo "$response" | jq -r '.data.markdown' > "$dest"
 done
 
-echo "done. raw pages written to $DOCS_DIR/"
+echo "done. raw pages written to $RAW_DIR/"
 echo "next: normalize each file into the 8-section template (see docs/README.md)"
+echo "normalization reads docs/.raw/ and writes into docs/read/ and docs/write/"
