@@ -40,4 +40,13 @@ update files to reflect new tooling:
 
 README.md, project-plan.md, and all three prompts/*.md files still reference the old paths (docs/read, docs/README.md,
 root-level openapi-3.0.yaml, etc.) — this is the exact gap v2-todos.md's Todo section already flags ("update
-files to reflect new tooling: README, CLAUDE, create CONTRIBUTING.md"), so it's known, just not done yet.                            
+files to reflect new tooling: README, CLAUDE, create CONTRIBUTING.md"), so it's known, just not done yet.
+
+### CLI
+
+- Root command's `meta.name` is `jamendo-openapi` (src/index.ts), but the actual entrypoint is `bun cli` (the
+  package.json script alias). Citty's usage output shows `jamendo-openapi <subcommand>`, which doesn't match what
+  the user types — confusing. Revisit once the CLI is compiled to a standalone binary (see below); the binary's
+  name should drive `meta.name`, not be decided ahead of it.
+- Eventually compile the CLI to a standalone binary (`bun build --compile` or similar) instead of running via
+  `bun run src/index.ts` / `bun cli`. Decide the binary name then, and set root `meta.name` to match.
