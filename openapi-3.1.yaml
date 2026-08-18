@@ -93,7 +93,14 @@ paths:
             type: array
             items:
               type: string
-              enum: [relevance, buzzrate, downloads_week, downloads_month, downloads_total, listens_week, listens_month, listens_total, popularity_week, popularity_month, popularity_total, name, album_name, artist_name, releasedate, duration, id]
+              enum:
+                [relevance, buzzrate, downloads_week, downloads_month,
+                 downloads_total, listens_week, listens_month, listens_total,
+                 popularity_week, popularity_month, popularity_total, name,
+                 album_name, artist_name, releasedate, duration, id,
+                 relevance_asc, relevance_desc, buzzrate_asc, buzzrate_desc,
+                 name_asc, name_desc, releasedate_asc, releasedate_desc,
+                 duration_asc, duration_desc, id_asc, id_desc]
         - name: id
           in: query
           required: false

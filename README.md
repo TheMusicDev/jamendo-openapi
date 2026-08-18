@@ -175,6 +175,30 @@ every schema field from `docs/` from scratch.
 
 This has not been re-attempted a fourth time. Known gap, not yet fixed.
 
+**`order` enums are missing `_asc`/`_desc` suffix variants on several
+entities, in both spec files.** Jamendo's convention lets you suffix most
+sortable `order` fields with `_asc` or `_desc` (e.g. `order=name_asc`), and
+several entity docs say so explicitly (`tracks`, `albums`, `albums/tracks`).
+Only `tracks` and `reviews/tracks`+`reviews/albums`'s enums actually include
+the suffixed variants in `openapi-3.0.yaml`; `openapi-3.1.yaml` was missing
+them even there until a review comment caught it on `/tracks` (fixed). Other
+entities with a documented `_asc`/`_desc` convention — `albums`,
+`albums/tracks` — still lack the suffixed variants in their `order` enum in
+both files. Since OpenAPI enums can't express a suffix pattern, the fix is
+enumerating `<field>_asc`/`<field>_desc` alongside each bare field name, the
+way `/tracks` and `/reviews/*` already do.
+
+**`feeds`'s `order` param has a default value not present in its own enum,
+in both spec files.** `openapi-3.1.yaml`'s `/feeds` `order` schema defaults
+to `[position_asc]`, but its `enum` only lists `[id, date_start, date_end,
+position]` — `position_asc` isn't a valid value per its own schema, which is
+self-contradictory. `openapi-3.0.yaml`'s `/feeds` `order` has the opposite
+problem: it defaults to `[position]` (valid) but doesn't include any
+`_asc`/`_desc` variants in its enum even though `docs/read/feeds.md`
+documents the default as `position_asc`. Both need the enum extended with
+`_asc`/`_desc` variants and the default corrected to `position_asc` to match
+the docs.
+
 ## Contributing
 
 See [`CONTRIBUTING.md`](./CONTRIBUTING.md) (to be written). The short version:
