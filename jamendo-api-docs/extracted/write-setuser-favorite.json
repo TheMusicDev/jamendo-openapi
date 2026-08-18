@@ -1,0 +1,61 @@
+{
+    "operationId": "addTrackToFavorites",
+    "method": "POST",
+    "path": "/setuser/favorite",
+    "authType": "oauth2",
+    "summary": "Add a track to the user's favorites (preferred tracks)",
+    "description": "Adds the specified track to the authenticated user's \"preferite\" (favorites) list. If the track does not exist, no error is returned but the track will not appear in any read request. Requires a valid client_id and an access_token with the 'music' scope.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com"
+        },
+        {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["xml", "json", "jsonpretty"],
+            "defaultValue": null,
+            "description": "The results formatting type"
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, includes the absolute number of rows the query would return without limit/offset. May impact performance."
+        },
+        {
+            "name": "access_token",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A valid OAuth2 access token with 'music' scope for the user to be updated"
+        },
+        {
+            "name": "track_id",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The ID of the track to add to the user's favorites"
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [],
+    "notes": [
+        "If the specified track_id does not exist, the request succeeds silently but the track will not be added.",
+        "The 'fullcount' parameter can degrade performance and is not available on all heavy methods."
+    ]
+}

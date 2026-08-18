@@ -1,0 +1,116 @@
+{
+    "operationId": "getFeeds",
+    "method": "GET",
+    "path": "/feeds",
+    "authType": "apikey",
+    "summary": "Retrieve editorial feeds displayed on the Jamendo homepage.",
+    "description": "Returns the editorial feeds that appear on the Jamendo homepage. Only feeds that are currently active (i.e., whose start and end dates include the request time) are returned. Each feed object includes a list of URLs for various image sizes (996_350, 315_111, 600_211, 470_165). The default sorting order is position_asc.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com."
+        },
+        {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["xml", "json", "jsonpretty"],
+            "defaultValue": null,
+            "description": "The results formatting type."
+        },
+        {
+            "name": "callback",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Wrap the JSON response in a callback function (JSONP). Only works with json format and GET requests."
+        },
+        {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The position to start returning results from."
+        },
+        {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The max number of results to return. Default is 10, max 200. Using the keyword 'all' still caps at 200 rows."
+        },
+        {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["id", "date_start", "date_end", "position"],
+            "defaultValue": null,
+            "description": "Sort results by the queried field(s). Append _asc or _desc to each field to set direction. Ascending is default."
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, adds 'results_fullcount' to the response header indicating the total number of rows without limit/offset."
+        },
+        {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Select feeds by their unique identifier."
+        },
+        {
+            "name": "lang",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["en", "fr", "es", "de", "pl", "it", "ru", "pt"],
+            "defaultValue": null,
+            "description": "Filter feeds to those with text in the specified language. Other languages may still appear in the response."
+        },
+        {
+            "name": "target",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["all", "logged", "notlogged"],
+            "defaultValue": "all",
+            "description": "Select feeds targeted to logged users, not logged users, or all. Default is 'all'."
+        },
+        {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["album", "artist", "playlist", "track", "news", "interview", "contest", "video", "update"],
+            "defaultValue": null,
+            "description": "Filter feeds by their type. Types include album, artist, playlist, track, news, interview, contest, video, update."
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [],
+    "notes": [
+        "Only active feeds (current date between start and end) are returned.",
+        "Default ordering is position_asc; you can override with the 'order' parameter.",
+        "The 'fullcount' parameter can impact performance and should be used only when necessary."
+    ]
+}

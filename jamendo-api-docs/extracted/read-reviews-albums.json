@@ -1,0 +1,179 @@
+{
+    "operationId": "listReviews",
+    "method": "GET",
+    "path": "/reviews",
+    "authType": "apikey",
+    "summary": "Filter and browse album reviews.",
+    "description": "Returns a list of album reviews with possible fields such as the number of agreements (agreecnt), the user-assigned score, review text and title. The only mandatory parameter is client_id; other parameters are optional and allow pagination, formatting, sorting and filtering of results.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com."
+        },
+        {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["xml", "json", "jsonpretty"],
+            "defaultValue": null,
+            "description": "The results formatting type."
+        },
+        {
+            "name": "callback",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Wrap the JSON response in a callback function (JSONP). Only works with json format and GET requests."
+        },
+        {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The position to start returning results from."
+        },
+        {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Maximum number of results to return (default 10, max 200; keyword 'all' is limited to 200)."
+        },
+        {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["addeddate", "score", "id"],
+            "defaultValue": null,
+            "description": "Sort results by the given field(s). Append _asc or _desc for direction; ascending is default."
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, response includes a results_fullcount header with the total number of rows without pagination."
+        },
+        {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more review IDs (comma‑separated)."
+        },
+        {
+            "name": "lang",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Two‑letter language code of the review (e.g., \"en\", \"fr\")."
+        },
+        {
+            "name": "datebetween",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Closed interval filter for review dates in the form \"YYYY-MM-DD_YYYY-MM-DD\"."
+        },
+        {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more user IDs (comma‑separated)."
+        },
+        {
+            "name": "access_token",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "OAuth2 access token for the Jamendo user; required only for user‑specific data."
+        },
+        {
+            "name": "hasscore",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Filter reviews that have (or do not have) a score."
+        },
+        {
+            "name": "album_id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more album IDs (comma‑separated)."
+        },
+        {
+            "name": "artist_id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Artist ID to filter reviews."
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [
+        {
+            "name": "agreecnt",
+            "type": "integer",
+            "nullable": false,
+            "description": "Number of agreements on the review."
+        },
+        {
+            "name": "score",
+            "type": "number",
+            "nullable": true,
+            "description": "Score assigned by the user."
+        },
+        {
+            "name": "text",
+            "type": "string",
+            "nullable": true,
+            "description": "Review text."
+        },
+        {
+            "name": "title",
+            "type": "string",
+            "nullable": true,
+            "description": "Review title."
+        }
+    ],
+    "notes": [
+        "client_id is mandatory for all calls.",
+        "access_token is optional; include it when you need user‑specific information.",
+        "order fields can be suffixed with _asc or _desc; default is ascending.",
+        "limit capped at 200 even when using \"all\".",
+        "fullcount may impact performance and is not available on heavy methods."
+    ]
+}

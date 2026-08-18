@@ -1,0 +1,535 @@
+{
+    "operationId": "listTracks",
+    "method": "GET",
+    "path": "/tracks",
+    "authType": "apikey",
+    "summary": "Search and retrieve tracks from Jamendo",
+    "description": "Returns a list of tracks matching the supplied query parameters. Includes new fields like 'audiodownload_allowed' indicating if a download can be offered. For singles, album related fields may be empty. Use the 'include' parameter to retrieve extra objects (licenses, musicinfo, stats, lyrics). Beware that changing the first order from 'relevance' will discard the relevance ranking; use 'boost' to influence ranking without losing relevance.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com."
+        },
+        {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["xml", "json", "jsonpretty"],
+            "defaultValue": "json",
+            "description": "The results formatting type."
+        },
+        {
+            "name": "callback",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Wrap JSON response in a callback function (JSONP). Only works with json format and GET."
+        },
+        {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The position to start returning results from."
+        },
+        {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": "10",
+            "description": "Maximum number of results to return (default 10, max 200). 'all' still capped at 200."
+        },
+        {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": [
+                "relevance",
+                "buzzrate",
+                "downloads_week",
+                "downloads_month",
+                "downloads_total",
+                "listens_week",
+                "listens_month",
+                "listens_total",
+                "popularity_week",
+                "popularity_month",
+                "popularity_total",
+                "name",
+                "album_name",
+                "artist_name",
+                "releasedate",
+                "duration",
+                "id"
+            ],
+            "defaultValue": null,
+            "description": "Sort results by the given field(s). Append _asc or _desc to specify direction. Rating orders force descending."
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, response header includes 'results_fullcount' (total rows without limit/offset). May affect performance."
+        },
+        {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more track IDs."
+        },
+        {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A track name."
+        },
+        {
+            "name": "namesearch",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Search a track by name (UTF‑8 string)."
+        },
+        {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["single", "albumtrack"],
+            "defaultValue": null,
+            "description": "Select only tracks of a certain type. Default returns only album tracks."
+        },
+        {
+            "name": "album_id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more album IDs."
+        },
+        {
+            "name": "album_name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Album name."
+        },
+        {
+            "name": "artist_id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more artist IDs."
+        },
+        {
+            "name": "artist_name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Artist name."
+        },
+        {
+            "name": "content_id_free",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Content ID free flag."
+        },
+        {
+            "name": "datebetween",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Release date interval (yyyy‑mm‑dd_yyyy‑mm‑dd)."
+        },
+        {
+            "name": "featured",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["true", "1"],
+            "defaultValue": null,
+            "description": "Filter for tracks selected by Jamendo team."
+        },
+        {
+            "name": "imagesize",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": [
+                "25",
+                "35",
+                "50",
+                "55",
+                "60",
+                "65",
+                "70",
+                "75",
+                "85",
+                "100",
+                "130",
+                "150",
+                "200",
+                "300",
+                "400",
+                "500",
+                "600"
+            ],
+            "defaultValue": null,
+            "description": "Cover image size in pixels."
+        },
+        {
+            "name": "audioformat",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["mp31", "mp32", "ogg", "flac"],
+            "defaultValue": "mp31",
+            "description": "Audio streaming format."
+        },
+        {
+            "name": "audiodlformat",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["mp31", "mp32", "ogg", "flac"],
+            "defaultValue": null,
+            "description": "Audio download format; defaults to audioformat or mp32."
+        },
+        {
+            "name": "tags",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Search by one or more tags (AND logic)."
+        },
+        {
+            "name": "fuzzytags",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Search by one or more tags (OR logic)."
+        },
+        {
+            "name": "acousticelectric",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["acoustic", "electric"],
+            "defaultValue": null,
+            "description": "Specify if track is acoustic or electric."
+        },
+        {
+            "name": "vocalinstrumental",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["vocal", "instrumental"],
+            "defaultValue": null,
+            "description": "Specify if track is vocal or instrumental."
+        },
+        {
+            "name": "gender",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["male", "female"],
+            "defaultValue": null,
+            "description": "Gender of the singer (if vocal)."
+        },
+        {
+            "name": "speed",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["verylow", "low", "medium", "high", "veryhigh"],
+            "defaultValue": null,
+            "description": "Track tempo classification."
+        },
+        {
+            "name": "lang",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Lyrics language (ISO 2‑letter code)."
+        },
+        {
+            "name": "durationbetween",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Track duration interval in seconds (from_to)."
+        },
+        {
+            "name": "xartist",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Find tracks similar to a non‑Jamendo artist."
+        },
+        {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Free text search across track, album, artist and tags."
+        },
+        {
+            "name": "prolicensing",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Only tracks in the single‑track commercial licensing program."
+        },
+        {
+            "name": "probackground",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Only tracks in the background‑music commercial program."
+        },
+        {
+            "name": "ccsa",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Filter for Creative Commons Share‑Alike licensed tracks."
+        },
+        {
+            "name": "ccnd",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Filter for Creative Commons No‑Derivs licensed tracks."
+        },
+        {
+            "name": "ccnc",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Filter for Creative Commons Non‑Commercial licensed tracks."
+        },
+        {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["licenses", "musicinfo", "stats", "lyrics"],
+            "defaultValue": null,
+            "description": "Append additional objects to each track result."
+        },
+        {
+            "name": "groupby",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["artist_id", "album_id"],
+            "defaultValue": null,
+            "description": "Aggregate results per artist or per album."
+        },
+        {
+            "name": "boost",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": [
+                "buzzrate",
+                "downloads_week",
+                "downloads_month",
+                "downloads_total",
+                "listens_week",
+                "listens_month",
+                "listens_total",
+                "popularity_week",
+                "popularity_month",
+                "popularity_total"
+            ],
+            "defaultValue": null,
+            "description": "When searching, boost the ranking using the selected metric."
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [
+        {
+            "name": "id",
+            "type": "integer",
+            "nullable": false,
+            "description": "Track identifier."
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "nullable": false,
+            "description": "Track name."
+        },
+        {
+            "name": "audio",
+            "type": "string",
+            "nullable": false,
+            "description": "Streaming URL (default mp31)."
+        },
+        {
+            "name": "audiodownload",
+            "type": "string",
+            "nullable": false,
+            "description": "Download URL; may be empty if not allowed."
+        },
+        {
+            "name": "audiodownload_allowed",
+            "type": "boolean",
+            "nullable": false,
+            "description": "Indicates whether the track can be downloaded."
+        },
+        {
+            "name": "duration",
+            "type": "integer",
+            "nullable": false,
+            "description": "Track duration in seconds."
+        },
+        {
+            "name": "album_id",
+            "type": "integer",
+            "nullable": true,
+            "description": "Album identifier (null for singles)."
+        },
+        {
+            "name": "album_name",
+            "type": "string",
+            "nullable": true,
+            "description": "Album name (null for singles)."
+        },
+        {
+            "name": "album_image",
+            "type": "string",
+            "nullable": true,
+            "description": "Album cover image URL (empty for singles)."
+        },
+        {
+            "name": "image",
+            "type": "string",
+            "nullable": false,
+            "description": "Track image URL (always present)."
+        },
+        {
+            "name": "artist_id",
+            "type": "integer",
+            "nullable": false,
+            "description": "Artist identifier."
+        },
+        {
+            "name": "artist_name",
+            "type": "string",
+            "nullable": false,
+            "description": "Artist name."
+        },
+        {
+            "name": "releasedate",
+            "type": "string",
+            "nullable": false,
+            "description": "Release date (yyyy‑mm‑dd)."
+        },
+        {
+            "name": "type",
+            "type": "string",
+            "nullable": false,
+            "description": "Either 'single' or 'albumtrack'."
+        },
+        {
+            "name": "tags",
+            "type": "array",
+            "nullable": true,
+            "description": "List of tags associated with the track."
+        },
+        {
+            "name": "licences",
+            "type": "object",
+            "nullable": true,
+            "description": "License information when requested via include=licenses."
+        },
+        {
+            "name": "musicinfo",
+            "type": "object",
+            "nullable": true,
+            "description": "Additional music metadata when include=musicinfo."
+        },
+        {
+            "name": "stats",
+            "type": "object",
+            "nullable": true,
+            "description": "Statistics (listens, downloads, etc.) when include=stats."
+        },
+        {
+            "name": "lyrics",
+            "type": "object",
+            "nullable": true,
+            "description": "Lyrics data when include=lyrics."
+        }
+    ],
+    "notes": [
+        "The field 'audiodownload_allowed' must be checked before offering a download link; if false, 'audiodownload' will be an empty string.",
+        "When using the tracks endpoint for search, keep 'order=relevance' as the first order to preserve relevance ranking; otherwise the relevance order is lost.",
+        "Use 'boost' instead of changing the primary order if you want a specific metric to influence ranking while retaining relevance.",
+        "For singles album_id, album_name and album_image are empty; handle nullable values accordingly.",
+        "'include' can dramatically increase payload size; request only needed extra objects.",
+        "The 'groupby' parameter returns only one track per group (artist or album), the first in the natural order.",
+        "Audio format defaults: streaming -> mp31, download -> mp32 (if not overridden).",
+        "The 'featured' filter accepts 'true' or '1' as values."
+    ]
+}

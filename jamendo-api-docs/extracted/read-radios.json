@@ -1,0 +1,116 @@
+{
+    "operationId": "listRadios",
+    "method": "GET",
+    "path": "/radios",
+    "authType": "apikey",
+    "summary": "Retrieve list of Jamendo radios",
+    "description": "Returns the list of existing Jamendo radios with their associated image and name. Each radio id or name can then be used to integrate the radio via the stream API. Note that commercial use requires a commercial license and upgrading the developer account to access 'pro' radios.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com."
+        },
+        {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "type": "enum",
+            "enumValues": ["xml", "json", "jsonpretty"],
+            "defaultValue": null,
+            "description": "The results formatting type."
+        },
+        {
+            "name": "callback",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Wraps the JSON response in a callback function (JSONP). Only works with json format and GET requests."
+        },
+        {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The position to start returning results from."
+        },
+        {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": "10",
+            "description": "Maximum number of results to return. Default is 10, max 200. Using 'all' still caps at 200."
+        },
+        {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "enum[]",
+            "enumValues": ["id", "name", "dispname"],
+            "defaultValue": null,
+            "description": "Sort results by field(s). Append _asc or _desc to specify order; default is ascending."
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, includes 'results_fullcount' with the total number of rows without pagination."
+        },
+        {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A radio id to filter the list."
+        },
+        {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "type": "enum",
+            "enumValues": ["www", "pro"],
+            "defaultValue": null,
+            "description": "Radio type: 'www' for public radios (default) or 'pro' for commercial radios."
+        },
+        {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A unique radio name to filter the list."
+        },
+        {
+            "name": "imagesize",
+            "in": "query",
+            "required": false,
+            "type": "enum",
+            "enumValues": ["150", "30"],
+            "defaultValue": null,
+            "description": "Radio image size in pixels. If not specified, a default size is returned."
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [],
+    "notes": [
+        "Commercial usage requires a paid license; 'pro' radios are only available after upgrading the account.",
+        "The 'callback' parameter works only with JSON format and GET requests; otherwise it is ignored with a warning.",
+        "Setting fullcount=true may impact performance and is not available on heavy methods."
+    ]
+}

@@ -1,0 +1,248 @@
+{
+    "operationId": "listArtists",
+    "method": "GET",
+    "path": "/artists",
+    "authType": "apikey",
+    "summary": "Retrieve a list of artists with optional track sub‑entities",
+    "description": "Returns artists and, for each artist, a sub‑entity containing its tracks. Supports filtering, ordering and pagination. Includes the new 'audiodownload_allowed' boolean on tracks and notes that the 'audiodownload' field may be empty when downloads are not allowed.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com."
+        },
+        {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["xml", "json", "jsonpretty"],
+            "defaultValue": null,
+            "description": "The results formatting type."
+        },
+        {
+            "name": "callback",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Wrap the JSON response in a callback function (JSONP). Only works with json format and GET requests."
+        },
+        {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The position to start returning results from."
+        },
+        {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": "10",
+            "description": "Maximum number of results to return (default 10, max 200, 'all' limited to 200)."
+        },
+        {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": [
+                "name",
+                "id",
+                "joindate",
+                "popularity_total",
+                "popularity_month",
+                "popularity_week",
+                "track_name",
+                "track_id",
+                "track_releasedate"
+            ],
+            "defaultValue": null,
+            "description": "Sort results by the queried field(s). Append '_asc' or '_desc' to specify direction; defaults are asc, except popularity fields default to desc."
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, adds 'results_fullcount' with the total number of rows ignoring limit/offset. Use sparingly due to performance impact."
+        },
+        {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more artist IDs."
+        },
+        {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Exact artist name."
+        },
+        {
+            "name": "namesearch",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Search artists by name using wildcard pattern."
+        },
+        {
+            "name": "hasimage",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["true", "1"],
+            "defaultValue": null,
+            "description": "Return only artists that have an image."
+        },
+        {
+            "name": "datebetween",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Filter by artist joining date range (format yyyy-mm-dd_yyyy-mm-dd)."
+        },
+        {
+            "name": "track_id",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more track IDs to filter artists by associated tracks."
+        },
+        {
+            "name": "track_name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Filter by track name."
+        },
+        {
+            "name": "track_type",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "enumValues": ["single", "albumtrack"],
+            "defaultValue": null,
+            "description": "Select tracks of a certain type. Default returns only albumtrack."
+        },
+        {
+            "name": "album_datebetween",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Filter albums by creation date range (yyyy-mm-dd_yyyy-mm-dd)."
+        },
+        {
+            "name": "album_id",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more album IDs."
+        },
+        {
+            "name": "album_name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Filter by album name."
+        },
+        {
+            "name": "imagesize",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": [
+                "25",
+                "35",
+                "50",
+                "55",
+                "60",
+                "65",
+                "70",
+                "75",
+                "85",
+                "100",
+                "130",
+                "150",
+                "200",
+                "300",
+                "400",
+                "500",
+                "600"
+            ],
+            "defaultValue": null,
+            "description": "Desired cover image size in pixels."
+        },
+        {
+            "name": "audioformat",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["mp31", "mp32", "ogg", "flac"],
+            "defaultValue": "mp31",
+            "description": "Audio format for the 'audio' field; defaults to mp31."
+        },
+        {
+            "name": "audiodlformat",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["mp31", "mp32", "ogg", "flac"],
+            "defaultValue": "mp32",
+            "description": "Audio download format for the 'audiodownload' field; defaults to audioformat or mp32."
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [
+        {
+            "name": "results",
+            "type": "array",
+            "nullable": false,
+            "description": "Array of artist objects, each containing standard artist fields and a 'tracks' sub‑entity."
+        },
+        {
+            "name": "headers",
+            "type": "object",
+            "nullable": true,
+            "description": "Metadata such as 'results_count' and optional 'results_fullcount' when fullcount=true."
+        }
+    ],
+    "notes": [
+        "Each track object now includes a boolean 'audiodownload_allowed' indicating if download is permitted.",
+        "If 'audiodownload_allowed' is false, the 'audiodownload' field will be an empty string (as of April 2022).",
+        "Singles (track_type=single) have empty album_* fields; use 'track_type' to filter if needed.",
+        "The 'order' parameter defaults to ascending except popularity fields which always sort descending."
+    ]
+}

@@ -1,0 +1,134 @@
+{
+    "operationId": "getUserArtists",
+    "method": "GET",
+    "path": "/users/artists",
+    "authType": "apikey",
+    "summary": "Retrieve the artists a user is a fan of",
+    "description": "Returns the list of Jamendo artists that a specified user follows (fan relation). The 'relation' parameter currently only supports 'fan', but is kept for future extensions. Requires a client_id (API key) and at least one of the user identifiers (id, access_token, or name). Optional parameters allow formatting, pagination, sorting, and image size selection.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com."
+        },
+        {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["xml", "json", "jsonpretty"],
+            "defaultValue": null,
+            "description": "The results formatting type."
+        },
+        {
+            "name": "callback",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Wrap the JSON response in a callback function (JSONP). Only works with json format and GET requests."
+        },
+        {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The position to start returning results from."
+        },
+        {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Maximum number of results to return. Default 10, max 200. 'all' is limited to 200 rows."
+        },
+        {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["updatedate"],
+            "defaultValue": null,
+            "description": "Sort results by the specified field(s). Append '_asc' or '_desc' for direction (default ascending)."
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, the response header includes 'results_fullcount' (total rows without pagination). Use sparingly for performance."
+        },
+        {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more user IDs."
+        },
+        {
+            "name": "access_token",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "OAuth2 access token of the Jamendo user."
+        },
+        {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more user names."
+        },
+        {
+            "name": "imagesize",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["30", "50", "100"],
+            "defaultValue": null,
+            "description": "The user avatar size in pixels."
+        },
+        {
+            "name": "artist_id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more artist IDs."
+        },
+        {
+            "name": "relation",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["fan"],
+            "defaultValue": null,
+            "description": "Relation type; currently only 'fan' is supported."
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [],
+    "notes": [
+        "client_id is mandatory for all calls.",
+        "At least one of id, access_token, or name must be provided to identify the user.",
+        "The 'relation' parameter defaults to 'fan' and is the only supported value today."
+    ]
+}

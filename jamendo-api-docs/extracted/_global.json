@@ -1,0 +1,12 @@
+{
+    "oauth2": {
+        "authorizationUrl": "https://api.jamendo.com/v3.0/oauth/authorize",
+        "tokenUrl": "https://api.jamendo.com/v3.0/oauth/grant",
+        "scopes": ["music"]
+    },
+    "envelope": {
+        "headerFields": ["status", "code", "error_message", "warnings"],
+        "resultsFieldName": "results"
+    },
+    "errorFields": ["error", "error_description", "error_uri"]
+}

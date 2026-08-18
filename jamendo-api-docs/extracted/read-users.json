@@ -1,0 +1,117 @@
+{
+    "operationId": "getUser",
+    "method": "GET",
+    "path": "/users",
+    "authType": "apikey",
+    "summary": "Get main information about a user",
+    "description": "Retrieves the primary information for a Jamendo user. This endpoint is a lookup (not a search) and requires a client_id together with at least one of id, access_token, or name to identify the user.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com."
+        },
+        {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["xml", "json", "jsonpretty"],
+            "defaultValue": null,
+            "description": "The results formatting type."
+        },
+        {
+            "name": "callback",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Wraps the JSON response in a callback function (JSONP). Only works with json format and GET requests."
+        },
+        {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The position to start returning results from."
+        },
+        {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Maximum number of results to return (default 10, max 200). Using 'all' still caps at 200."
+        },
+        {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Sort results by field(s). Append _asc or _desc to specify direction (default ascending)."
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, includes 'results_fullcount' in the header indicating total rows without pagination. Use sparingly for performance reasons."
+        },
+        {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more user IDs (no access token required)."
+        },
+        {
+            "name": "access_token",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "OAuth2 access token for the Jamendo user whose data you want to retrieve."
+        },
+        {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more user names."
+        },
+        {
+            "name": "imagesize",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["30", "50", "100"],
+            "defaultValue": null,
+            "description": "User avatar size in pixels. If omitted, a default size is returned."
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [],
+    "notes": [
+        "client_id is mandatory for every request.",
+        "At least one of id, access_token, or name must be supplied to identify the user.",
+        "authType is apikey because the endpoint can be accessed with a client_id; OAuth2 token is optional and used only when access_token is provided.",
+        "The 'order' parameter expects a comma‑separated list of fields, each optionally suffixed with _asc or _desc."
+    ]
+}

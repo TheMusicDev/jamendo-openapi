@@ -1,0 +1,126 @@
+{
+    "_global": {
+        "hash": "4349f7103f418d0d338b96500a2a4e98",
+        "fetchedAt": "2026-08-18T23:21:25.561Z"
+    },
+    "albums/file": {
+        "hash": "d9480c88771dd181a4073a614e548c6f",
+        "fetchedAt": "2026-08-18T23:21:27.562Z"
+    },
+    "albums": {
+        "hash": "5806055038f03047af8f6bd4bd16854d",
+        "fetchedAt": "2026-08-18T23:21:29.488Z"
+    },
+    "albums/tracks": {
+        "hash": "d6509f742275142a9726e8a3f7e1fe90",
+        "fetchedAt": "2026-08-18T23:21:32.004Z"
+    },
+    "albums/musicinfo": {
+        "hash": "7050c98abf92b4bf2463a8d49af45f64",
+        "fetchedAt": "2026-08-18T23:21:33.996Z"
+    },
+    "artists": {
+        "hash": "d962accbf6c5488ce0927adead8d8cc4",
+        "fetchedAt": "2026-08-18T23:21:35.893Z"
+    },
+    "artists/tracks": {
+        "hash": "8a81b385bee269356d85595983063f9a",
+        "fetchedAt": "2026-08-18T23:21:38.827Z"
+    },
+    "artists/albums": {
+        "hash": "39ce7eff95ef62d0b786a147a8311438",
+        "fetchedAt": "2026-08-18T23:21:41.291Z"
+    },
+    "artists/musicinfo": {
+        "hash": "2bbb2da95836a8858a9327f3cd6b58bc",
+        "fetchedAt": "2026-08-18T23:21:45.321Z"
+    },
+    "artists/locations": {
+        "hash": "0e393b841c3d6a2c44f5ed1d550ff8cb",
+        "fetchedAt": "2026-08-18T23:21:45.397Z"
+    },
+    "feeds": {
+        "hash": "c7caeb4cceb4d420f166f21ce421f3b2",
+        "fetchedAt": "2026-08-18T23:21:49.203Z"
+    },
+    "playlists/file": {
+        "hash": "e186303430887173a02b7c70d370702c",
+        "fetchedAt": "2026-08-18T23:21:51.287Z"
+    },
+    "playlists": {
+        "hash": "0c4ab6dfbd0fbe9ceb8a48654cd3daaa",
+        "fetchedAt": "2026-08-18T23:21:51.408Z"
+    },
+    "radios": {
+        "hash": "eeca6b9ff51c052c002ceb70b9f49eb4",
+        "fetchedAt": "2026-08-18T23:21:54.737Z"
+    },
+    "playlists/tracks": {
+        "hash": "3e5c63d7bb4ce707a29e38188797a642",
+        "fetchedAt": "2026-08-18T23:21:56.272Z"
+    },
+    "radios/stream": {
+        "hash": "adc927eafade51b3bf09139e01fe2140",
+        "fetchedAt": "2026-08-18T23:21:57.857Z"
+    },
+    "reviews/albums": {
+        "hash": "fefd2be8c14755b7075efe185c98a0e1",
+        "fetchedAt": "2026-08-18T23:22:02.273Z"
+    },
+    "reviews/tracks": {
+        "hash": "c4bad2fb2a7458410ff0671db44f9787",
+        "fetchedAt": "2026-08-18T23:22:04.822Z"
+    },
+    "tracks/file": {
+        "hash": "f35b44c8f27c455bccac0b33306e764b",
+        "fetchedAt": "2026-08-18T23:22:07.574Z"
+    },
+    "tracks": {
+        "hash": "da2f68091334efe1cc728431fa86dd05",
+        "fetchedAt": "2026-08-18T23:22:12.071Z"
+    },
+    "tracks/similar": {
+        "hash": "f4bfa50748c07dfc4f3a40a8e8e8f253",
+        "fetchedAt": "2026-08-18T23:22:12.637Z"
+    },
+    "users": {
+        "hash": "b3bb0c0a3fcd08a5da90f5b894a9f1b0",
+        "fetchedAt": "2026-08-18T23:22:15.419Z"
+    },
+    "users/artists": {
+        "hash": "5f3ae58084732e7808cdf11298b6cba5",
+        "fetchedAt": "2026-08-18T23:22:17.823Z"
+    },
+    "users/albums": {
+        "hash": "2ba918b1d6537914a50bf9f151b180b6",
+        "fetchedAt": "2026-08-18T23:22:19.269Z"
+    },
+    "setuser/fan": {
+        "hash": "830e9afd45c131384ef138adca5cfb90",
+        "fetchedAt": "2026-08-18T23:22:21.977Z"
+    },
+    "users/tracks": {
+        "hash": "8bf0a54bdbccf8fdadd022a990e144de",
+        "fetchedAt": "2026-08-18T23:22:22.513Z"
+    },
+    "setuser/favorite": {
+        "hash": "0131fbdc98a2712c1a3a187336750386",
+        "fetchedAt": "2026-08-18T23:22:24.429Z"
+    },
+    "setuser/like": {
+        "hash": "90086cd89bd2d0d110e6a852173f1ffc",
+        "fetchedAt": "2026-08-18T23:22:24.449Z"
+    },
+    "setuser/dislike": {
+        "hash": "b93fc9b041fb4ab35a1d93ad3f6d914f",
+        "fetchedAt": "2026-08-18T23:22:27.093Z"
+    },
+    "setuser/myalbum": {
+        "hash": "6a67700911d1191e00a9b0e4d9328f0a",
+        "fetchedAt": "2026-08-18T23:22:27.424Z"
+    },
+    "autocomplete": {
+        "hash": "f7d6bfb2ab78174dd9cc2a626219d920",
+        "fetchedAt": "2026-08-18T23:25:51.074Z"
+    }
+}

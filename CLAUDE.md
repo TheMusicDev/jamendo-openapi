@@ -1,4 +1,18 @@
 
+## Check/verify requests: report, don't fix
+
+When asked to "check", "verify", "review", "confirm", or "look at" something, the task is
+to read and report — not to fix, refactor, redesign, or re-run things you find along the way.
+
+- If you find a real bug or gap, describe it and stop. Ask before fixing it.
+- Do not chase a fix into rewriting unrelated code, redesigning a helper, killing/restarting
+  processes, or re-running commands "to confirm" beyond what's needed to answer the question asked.
+- A "check" that turns into 20+ minutes of edits is the wrong behavior, even if the edits are
+  correct. Scope creep during verification wastes time and buries the actual finding.
+- If verifying requires a small non-destructive read (e.g. `cat` a file, run existing tests),
+  that's fine. Writing new code, deleting cache/manifest entries, or restarting long-running
+  jobs is not part of a check unless explicitly asked for.
+
 Default to using Bun instead of Node.js.
 
 - Use `bun <file>` instead of `node <file>` or `ts-node <file>`
