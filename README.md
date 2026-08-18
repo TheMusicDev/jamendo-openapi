@@ -52,6 +52,19 @@ the spec matches the wire, not just the prose.
   client territory.
 - No opinions on how a consumer uses the spec beyond publishing it cleanly.
 
+## Setup
+
+Copy `.env.example` to `.env` and fill in:
+
+- `FIRECRAWL_API_KEY` — required to run `scripts/fetch-docs.sh` (Step 1: fetch
+  the Jamendo docs). Get one at [firecrawl.dev](https://firecrawl.dev).
+- `JAMENDO_CLIENT_ID` / `JAMENDO_CLIENT_SECRET` — required for Step 3 (live
+  spot-check against the real API). Register an app at
+  [developer.jamendo.com](https://developer.jamendo.com) to get these.
+
+`.env` is gitignored — never commit it. See `prompts/` for the Claude Code
+prompt for each step of `project-plan.md`.
+
 ## Contributing
 
 See [`CONTRIBUTING.md`](./CONTRIBUTING.md) (to be written). The short version:
