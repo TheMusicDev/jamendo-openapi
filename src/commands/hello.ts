@@ -2,6 +2,7 @@ import { defineCommand } from 'citty';
 
 export default defineCommand({
     meta: {
+        name: 'hello',
         description: 'Print a hello world greeting',
     },
     run() {

@@ -1,5 +1,6 @@
 #!/usr/bin/env bun
 import { defineCommand, runMain } from 'citty';
+import FetchDocsCommand from './commands/fetch-docs.ts';
 import HelloCommand from './commands/hello.ts';
 
 const main = defineCommand({
@@ -9,6 +10,7 @@ const main = defineCommand({
     },
     subCommands: {
         hello: HelloCommand,
+        'fetch-docs': FetchDocsCommand,
     },
 });
 
