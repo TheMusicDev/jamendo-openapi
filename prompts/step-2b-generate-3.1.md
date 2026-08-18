@@ -21,6 +21,11 @@ end up differing in *content* (not idiom — e.g. a missing endpoint, a
 different required field), that's a bug in one of the two passes and should
 be caught, not shipped.
 
+If a field's `## meta` description or `## notes` mentions a conditional case
+(e.g. "empty for singles," "empty string if X is false"), carry that into the
+field's own `description` in the schema — not just the path-level operation
+description.
+
 Same entity processing order as 2a: `tracks → albums → artists → playlists →
 radios → reviews → users → feeds → autocomplete`, then `setuser/*` write
 entities.
@@ -30,6 +35,8 @@ Same known-quirk pages to handle carefully (see their `## notes`):
 `playlists/file` (binary redirects, not JSON), `radios/stream` (documented as
 unreliable).
 
-Run `scripts/validate.sh` and fix everything it flags before finishing.
+**Do not run `scripts/validate.sh` or any other linter.** Validation is run
+separately, by hand. Do not create or modify any linter config file (e.g.
+`redocly.yaml`) — that's not part of this task.
 
 **Do not commit.** Leave the file in the working tree for review.

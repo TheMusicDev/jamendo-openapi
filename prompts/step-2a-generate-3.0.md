@@ -20,7 +20,11 @@ Generate `openapi-3.0.yaml` as a valid OpenAPI 3.0.3 spec:
   - POST write endpoints (`setuser/*`) → `security: [{oauth2: [...]}]`, with
     a request body built from each page's `## request_body` section.
 - Fill each `components/schemas/<Entity>` from the `## responses` section of
-  its doc page.
+  its doc page. If a field's `## meta` description or `## notes` mentions a
+  conditional case (e.g. "empty for singles," "empty string if X is false"),
+  carry that into the field's own `description` in the schema — not just the
+  path-level operation description. A consumer reading the schema for one
+  field should see the caveat without also reading the whole endpoint prose.
 - Reuse shared parameters/schemas via `$ref` — never redefine the same thing
   twice. Subentity pages (`/albums/tracks`, `/artists/albums`, etc.)
   reference the parent entity's schema via `$ref`, they don't redeclare it.
@@ -43,6 +47,8 @@ modeling the schema:
   JSON responses — their error bodies aren't the shared `Error` schema.
 - `radios/stream` is documented as unreliable per Jamendo's own docs.
 
-Run `scripts/validate.sh` and fix everything it flags before finishing.
+**Do not run `scripts/validate.sh` or any other linter.** Validation is run
+separately, by hand. Do not create or modify any linter config file (e.g.
+`redocly.yaml`) — that's not part of this task.
 
 **Do not commit.** Leave the file in the working tree for review.
