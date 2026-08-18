@@ -24,7 +24,9 @@
         "typescript": "^7.0.2"
     },
     "dependencies": {
+        "@ai-sdk/openai-compatible": "^3.0.31",
         "@mendable/firecrawl-js": "^4.32.2",
+        "ai": "^7.0.67",
         "bottleneck": "^2.19.5",
         "citty": "^0.2.2",
         "pino": "^10.3.1",
