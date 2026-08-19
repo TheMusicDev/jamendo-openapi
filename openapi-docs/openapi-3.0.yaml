@@ -31,29 +31,8 @@ paths:
           schema:
             type: integer
       responses:
-        "200":
-          description: Successful response.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  headers:
-                    type: object
-                    properties:
-                      status:
-                        type: string
-                      code:
-                        type: string
-                      error_message:
-                        type: string
-                      warnings:
-                        type: string
-                  results:
-                    type: array
-                    items:
-                      type: object
-                      properties: {}
+        "302":
+          description: Redirect to the requested file. No JSON body is returned.
         default:
           description: Error response.
           content:
@@ -577,69 +556,114 @@ paths:
           empty string.
         - The endpoint does not include the version prefix in the path; use
           '/albums' as shown.
-  /artists:
+  /artists/albums:
     get:
-      operationId: listArtists_artists
-      summary: Retrieve a list of artists
-      description: Returns artists with optional filtering, pagination and sorting.
-        Sub‑methods such as artists/tracks, artists/albums, etc. are available.
-        The method requires a client_id and supports various query parameters to
-        control the result set.
+      operationId: getArtists
+      summary: Retrieve artists and their albums with filtering options
+      description: Returns a list of artists (optionally with their albums) and allows
+        filtering, sorting and pagination. The `client_id` query parameter is
+        required. Use `fullcount=true` only when necessary as it may impact
+        performance. The `callback` parameter works only with JSON responses and
+        GET requests.
       security:
         - apikey_auth: []
       parameters:
         - $ref: "#/components/parameters/client_id_2"
         - $ref: "#/components/parameters/format"
-        - $ref: "#/components/parameters/callback"
+        - name: callback
+          in: query
+          required: false
+          description: Wrap the JSON response in a JavaScript callback (JSONP). Works only
+            with JSON format and GET requests.
+          schema:
+            type: string
         - $ref: "#/components/parameters/offset"
         - name: limit
           in: query
           required: false
-          description: Maximum number of results to return. Default 10, max 200. Using
-            'all' still caps at 200.
+          description: Maximum number of results to return. Default is 10, max 200. The
+            keyword 'all' returns up to 200 rows.
           schema:
             type: string
         - name: order
           in: query
           required: false
-          description: Sort results by the specified field(s). Append _asc or _desc to set
-            direction. Ascending is default, except popularity fields which
-            default to descending.
+          description: Sort results by the specified field(s). Append `_asc` or `_desc` to
+            set direction. Ascending is default, but popularity fields force
+            descending.
           schema:
-            type: string
-            enum:
-              - name
-              - id
-              - joindate
-              - popularity_total
-              - popularity_month
-              - popularity_week
+            type: array
+            items:
+              type: string
+              enum:
+                - name
+                - id
+                - joindate
+                - popularity_total
+                - popularity_month
+                - popularity_week
+                - album_name
+                - album_id
+                - album_releasedate
         - name: fullcount
           in: query
           required: false
-          description: If true, response header includes 'results_fullcount' – the total
-            number of rows without limit/offset. Use sparingly for performance.
+          description: If true, response header includes `results_fullcount` with the
+            total row count without pagination.
           schema:
             type: boolean
         - name: id
           in: query
           required: false
-          description: One or more artist IDs (comma‑separated).
+          description: One or more artist IDs to filter.
           schema:
-            type: integer
-        - $ref: "#/components/parameters/name"
+            type: array
+            items:
+              type: string
+        - name: name
+          in: query
+          required: false
+          description: Exact artist name to filter.
+          schema:
+            type: string
         - name: namesearch
           in: query
           required: false
-          description: Search for artists whose name contains the given substring.
+          description: Search for artists containing the given substring.
           schema:
             type: string
         - $ref: "#/components/parameters/hasimage"
         - name: datebetween
           in: query
           required: false
-          description: "Filter on artist joining date. Format: 'yyyy-mm-dd_yyyy-mm-dd'
+          description: "Filter artists by joining date. Format: yyyy-mm-dd_yyyy-mm-dd
             (from_to)."
+          schema:
+            type: string
+        - name: album_id
+          in: query
+          required: false
+          description: One or more album IDs to filter.
+          schema:
+            type: array
+            items:
+              type: string
+        - name: album_name
+          in: query
+          required: false
+          description: Album name to filter.
+          schema:
+            type: string
+        - name: album_datebetween
+          in: query
+          required: false
+          description: "Filter albums by release date. Format: yyyy-mm-dd_yyyy-mm-dd."
+          schema:
+            type: string
+        - name: imagesize
+          in: query
+          required: false
+          description: Size of the album cover image in pixels.
           schema:
             type: string
       responses:
@@ -680,11 +704,11 @@ paths:
                   error_uri:
                     type: string
       x-notes:
-        - Do not include the version prefix in the path; use "/artists".
-        - The 'limit' parameter cannot exceed 200 even when set to 'all'.
-        - Popularity‑based order fields always use descending order, ignoring an
-          explicit _asc suffix.
-        - Enabling 'fullcount' may impact performance on heavy queries.
+        - The `order` parameter defaults to ascending; popularity fields always
+          use descending order even if `_asc` is specified.
+        - "`fullcount` can degrade performance and is not available on heavy
+          methods."
+        - "`callback` is ignored for non‑JSON formats or non‑GET requests."
   /artists/locations:
     get:
       operationId: getArtistLocations
@@ -1212,6 +1236,331 @@ paths:
           requested.
         - Setting fullcount=true can significantly affect response time on large
           result sets.
+  /artists/tracks:
+    get:
+      operationId: listArtists_artistsTracks
+      summary: Retrieve a list of artists with optional track sub‑entities
+      description: Returns artists and, for each artist, a sub‑entity containing its
+        tracks. Supports filtering, ordering and pagination. Includes the new
+        'audiodownload_allowed' boolean on tracks and notes that the
+        'audiodownload' field may be empty when downloads are not allowed.
+      security:
+        - apikey_auth: []
+      parameters:
+        - $ref: "#/components/parameters/client_id_2"
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/callback_2"
+        - $ref: "#/components/parameters/offset"
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of results to return (default 10, max 200, 'all'
+            limited to 200).
+          schema:
+            type: string
+            default: "10"
+        - name: order
+          in: query
+          required: false
+          description: Sort results by the queried field(s). Append '_asc' or '_desc' to
+            specify direction; defaults are asc, except popularity fields
+            default to desc.
+          schema:
+            type: string
+            enum:
+              - name
+              - id
+              - joindate
+              - popularity_total
+              - popularity_month
+              - popularity_week
+              - track_name
+              - track_id
+              - track_releasedate
+        - name: fullcount
+          in: query
+          required: false
+          description: If true, adds 'results_fullcount' with the total number of rows
+            ignoring limit/offset. Use sparingly due to performance impact.
+          schema:
+            type: boolean
+        - name: id
+          in: query
+          required: false
+          description: One or more artist IDs.
+          schema:
+            type: array
+            items:
+              type: string
+        - $ref: "#/components/parameters/name"
+        - name: namesearch
+          in: query
+          required: false
+          description: Search artists by name using wildcard pattern.
+          schema:
+            type: string
+        - $ref: "#/components/parameters/hasimage"
+        - name: datebetween
+          in: query
+          required: false
+          description: Filter by artist joining date range (format yyyy-mm-dd_yyyy-mm-dd).
+          schema:
+            type: string
+        - name: track_id
+          in: query
+          required: false
+          description: One or more track IDs to filter artists by associated tracks.
+          schema:
+            type: array
+            items:
+              type: string
+        - name: track_name
+          in: query
+          required: false
+          description: Filter by track name.
+          schema:
+            type: string
+        - name: track_type
+          in: query
+          required: false
+          description: Select tracks of a certain type. Default returns only albumtrack.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - single
+                - albumtrack
+        - name: album_datebetween
+          in: query
+          required: false
+          description: Filter albums by creation date range (yyyy-mm-dd_yyyy-mm-dd).
+          schema:
+            type: string
+        - name: album_id
+          in: query
+          required: false
+          description: One or more album IDs.
+          schema:
+            type: array
+            items:
+              type: string
+        - name: album_name
+          in: query
+          required: false
+          description: Filter by album name.
+          schema:
+            type: string
+        - name: imagesize
+          in: query
+          required: false
+          description: Desired cover image size in pixels.
+          schema:
+            type: string
+            enum:
+              - "25"
+              - "35"
+              - "50"
+              - "55"
+              - "60"
+              - "65"
+              - "70"
+              - "75"
+              - "85"
+              - "100"
+              - "130"
+              - "150"
+              - "200"
+              - "300"
+              - "400"
+              - "500"
+              - "600"
+        - name: audioformat
+          in: query
+          required: false
+          description: Audio format for the 'audio' field; defaults to mp31.
+          schema:
+            type: string
+            enum:
+              - mp31
+              - mp32
+              - ogg
+              - flac
+            default: mp31
+        - name: audiodlformat
+          in: query
+          required: false
+          description: Audio download format for the 'audiodownload' field; defaults to
+            audioformat or mp32.
+          schema:
+            type: string
+            enum:
+              - mp31
+              - mp32
+              - ogg
+              - flac
+            default: mp32
+      responses:
+        "200":
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  headers:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                      code:
+                        type: string
+                      error_message:
+                        type: string
+                      warnings:
+                        type: string
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        results:
+                          type: array
+                          items:
+                            type: string
+                        headers:
+                          type: object
+                          nullable: true
+        default:
+          description: Error response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  error_uri:
+                    type: string
+      x-notes:
+        - Each track object now includes a boolean 'audiodownload_allowed'
+          indicating if download is permitted.
+        - If 'audiodownload_allowed' is false, the 'audiodownload' field will be
+          an empty string (as of April 2022).
+        - Singles (track_type=single) have empty album_* fields; use
+          'track_type' to filter if needed.
+        - The 'order' parameter defaults to ascending except popularity fields
+          which always sort descending.
+  /artists:
+    get:
+      operationId: listArtists_artists
+      summary: Retrieve a list of artists
+      description: Returns artists with optional filtering, pagination and sorting.
+        Sub‑methods such as artists/tracks, artists/albums, etc. are available.
+        The method requires a client_id and supports various query parameters to
+        control the result set.
+      security:
+        - apikey_auth: []
+      parameters:
+        - $ref: "#/components/parameters/client_id_2"
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/callback"
+        - $ref: "#/components/parameters/offset"
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of results to return. Default 10, max 200. Using
+            'all' still caps at 200.
+          schema:
+            type: string
+        - name: order
+          in: query
+          required: false
+          description: Sort results by the specified field(s). Append _asc or _desc to set
+            direction. Ascending is default, except popularity fields which
+            default to descending.
+          schema:
+            type: string
+            enum:
+              - name
+              - id
+              - joindate
+              - popularity_total
+              - popularity_month
+              - popularity_week
+        - name: fullcount
+          in: query
+          required: false
+          description: If true, response header includes 'results_fullcount' – the total
+            number of rows without limit/offset. Use sparingly for performance.
+          schema:
+            type: boolean
+        - name: id
+          in: query
+          required: false
+          description: One or more artist IDs (comma‑separated).
+          schema:
+            type: integer
+        - $ref: "#/components/parameters/name"
+        - name: namesearch
+          in: query
+          required: false
+          description: Search for artists whose name contains the given substring.
+          schema:
+            type: string
+        - $ref: "#/components/parameters/hasimage"
+        - name: datebetween
+          in: query
+          required: false
+          description: "Filter on artist joining date. Format: 'yyyy-mm-dd_yyyy-mm-dd'
+            (from_to)."
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  headers:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                      code:
+                        type: string
+                      error_message:
+                        type: string
+                      warnings:
+                        type: string
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties: {}
+        default:
+          description: Error response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  error_uri:
+                    type: string
+      x-notes:
+        - Do not include the version prefix in the path; use "/artists".
+        - The 'limit' parameter cannot exceed 200 even when set to 'all'.
+        - Popularity‑based order fields always use descending order, ignoring an
+          explicit _asc suffix.
+        - Enabling 'fullcount' may impact performance on heavy queries.
   /autocomplete:
     get:
       operationId: autocomplete
@@ -1496,6 +1845,170 @@ paths:
           schema:
             type: integer
       responses:
+        "302":
+          description: Redirect to the requested file. No JSON body is returned.
+        default:
+          description: Error response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  error_uri:
+                    type: string
+      x-notes:
+        - The endpoint performs an HTTP redirect rather than returning a JSON
+          payload.
+        - Only the 'mp3' audioformat is available at this time.
+        - A missing or invalid client_id or id will result in a 404 or 500 error.
+  /playlists/tracks:
+    get:
+      operationId: getPlaylists_playlistsTracks
+      summary: Retrieve playlists with optional filters and track details
+      description: Returns a playlist entity containing the list of belonging tracks.
+        Includes the new 'audiodownload_allowed' boolean to indicate if a track
+        can be downloaded. If 'audiodownload_allowed' is false, the
+        'audiodownload' field will be returned as an empty string (as of April
+        2022). Use the 'track_type' parameter to include singles or album
+        tracks. At least one of id, name, user_id, access_token, or user_name
+        must be provided together with the required client_id.
+      security:
+        - apikey_auth: []
+      parameters:
+        - $ref: "#/components/parameters/client_id_2"
+        - $ref: "#/components/parameters/format_2"
+        - $ref: "#/components/parameters/callback_2"
+        - $ref: "#/components/parameters/offset"
+        - name: limit
+          in: query
+          required: false
+          description: The max number of results to return. Default is 10, max 200. Using
+            'all' still caps at 200.
+          schema:
+            type: string
+        - name: order
+          in: query
+          required: false
+          description: Sort results by the queried field(s). Append '_asc' or '_desc' for
+            direction. Ascending is default.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - name
+                - id
+                - creationdate
+                - track_id
+                - track_name
+                - track_added_date
+                - track_position
+        - name: fullcount
+          in: query
+          required: false
+          description: If true, adds 'results_fullcount' in the header indicating total
+            rows without limit/offset. Use sparingly due to performance impact.
+          schema:
+            type: boolean
+        - $ref: "#/components/parameters/id"
+        - name: name
+          in: query
+          required: false
+          description: A playlist name.
+          schema:
+            type: string
+        - name: namesearch
+          in: query
+          required: false
+          description: Search a playlist by name (playlist_name matching *searchquery*).
+          schema:
+            type: string
+        - $ref: "#/components/parameters/user_id"
+        - name: access_token
+          in: query
+          required: false
+          description: A valid OAuth2 access token for the Jamendo user.
+          schema:
+            type: string
+        - $ref: "#/components/parameters/user_name"
+        - name: datebetween
+          in: query
+          required: false
+          description: Filter playlists created between two dates. Format 'from_to' (both
+            integers).
+          schema:
+            type: string
+        - name: audioformat
+          in: query
+          required: false
+          description: Audio format for the 'audio' field. Default is mp31 if omitted.
+          schema:
+            type: string
+            enum:
+              - mp31
+              - mp32
+              - ogg
+              - flac
+            default: mp31
+        - name: track_type
+          in: query
+          required: false
+          description: Select tracks of a certain type. Default returns only albumtracks.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - single
+                - albumtrack
+        - name: imagesize
+          in: query
+          required: false
+          description: Desired cover image size in pixels.
+          schema:
+            type: string
+            enum:
+              - "25"
+              - "35"
+              - "50"
+              - "55"
+              - "60"
+              - "65"
+              - "70"
+              - "75"
+              - "85"
+              - "100"
+              - "130"
+              - "150"
+              - "200"
+              - "300"
+              - "400"
+              - "500"
+              - "600"
+        - name: positionbetween
+          in: query
+          required: false
+          description: Filter on the track position in the playlist. Format 'from_to'
+            (both integers).
+          schema:
+            type: string
+        - name: audiodlformat
+          in: query
+          required: false
+          description: Audio download format for the 'audiodownload' field. Defaults to
+            audioformat or mp32.
+          schema:
+            type: string
+            enum:
+              - mp31
+              - mp32
+              - ogg
+              - flac
+      responses:
         "200":
           description: Successful response.
           content:
@@ -1533,10 +2046,14 @@ paths:
                   error_uri:
                     type: string
       x-notes:
-        - The endpoint performs an HTTP redirect rather than returning a JSON
-          payload.
-        - Only the 'mp3' audioformat is available at this time.
-        - A missing or invalid client_id or id will result in a 404 or 500 error.
+        - The 'audiodownload_allowed' field (boolean) indicates if a track can
+          be downloaded via your app.
+        - If 'audiodownload_allowed' is false, the 'audiodownload' field will be
+          returned as an empty string (effective April 2022).
+        - At least one of id, name, user_id, access_token, or user_name must be
+          supplied together with client_id.
+        - Array parameters (e.g., id, user_id, track_type) can be provided as
+          comma‑separated values.
   /playlists:
     get:
       operationId: getPlaylists_playlists
@@ -1870,9 +2387,150 @@ paths:
           otherwise it is ignored with a warning.
         - Setting fullcount=true may impact performance and is not available on
           heavy methods.
-  /reviews:
+  /reviews/albums:
     get:
-      operationId: listReviews_reviews
+      operationId: listReviews_reviewsAlbums
+      summary: Filter and browse album reviews.
+      description: Returns a list of album reviews with possible fields such as the
+        number of agreements (agreecnt), the user-assigned score, review text
+        and title. The only mandatory parameter is client_id; other parameters
+        are optional and allow pagination, formatting, sorting and filtering of
+        results.
+      security:
+        - apikey_auth: []
+      parameters:
+        - $ref: "#/components/parameters/client_id_2"
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/callback_2"
+        - $ref: "#/components/parameters/offset"
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of results to return (default 10, max 200; keyword
+            'all' is limited to 200).
+          schema:
+            type: string
+        - name: order
+          in: query
+          required: false
+          description: Sort results by the given field(s). Append _asc or _desc for
+            direction; ascending is default.
+          schema:
+            type: string
+            enum:
+              - addeddate
+              - score
+              - id
+        - name: fullcount
+          in: query
+          required: false
+          description: If true, response includes a results_fullcount header with the
+            total number of rows without pagination.
+          schema:
+            type: boolean
+        - name: id
+          in: query
+          required: false
+          description: One or more review IDs (comma‑separated).
+          schema:
+            type: integer
+        - name: lang
+          in: query
+          required: false
+          description: Two‑letter language code of the review (e.g., "en", "fr").
+          schema:
+            type: string
+        - name: datebetween
+          in: query
+          required: false
+          description: Closed interval filter for review dates in the form
+            "YYYY-MM-DD_YYYY-MM-DD".
+          schema:
+            type: string
+        - name: user_id
+          in: query
+          required: false
+          description: One or more user IDs (comma‑separated).
+          schema:
+            type: integer
+        - name: access_token
+          in: query
+          required: false
+          description: OAuth2 access token for the Jamendo user; required only for
+            user‑specific data.
+          schema:
+            type: string
+        - $ref: "#/components/parameters/hasscore"
+        - name: album_id
+          in: query
+          required: false
+          description: One or more album IDs (comma‑separated).
+          schema:
+            type: integer
+        - name: artist_id
+          in: query
+          required: false
+          description: Artist ID to filter reviews.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  headers:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                      code:
+                        type: string
+                      error_message:
+                        type: string
+                      warnings:
+                        type: string
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        agreecnt:
+                          type: integer
+                        score:
+                          type: number
+                          nullable: true
+                        text:
+                          type: string
+                          nullable: true
+                        title:
+                          type: string
+                          nullable: true
+        default:
+          description: Error response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  error_uri:
+                    type: string
+      x-notes:
+        - client_id is mandatory for all calls.
+        - access_token is optional; include it when you need user‑specific
+          information.
+        - order fields can be suffixed with _asc or _desc; default is ascending.
+        - limit capped at 200 even when using "all".
+        - fullcount may impact performance and is not available on heavy methods.
+  /reviews/tracks:
+    get:
+      operationId: listReviews_reviewsTracks
       summary: Browse and filter track reviews
       description: Returns a list of track reviews with optional filtering, sorting
         and pagination. Includes new boolean field 'track_audiodownload_allowed'
@@ -2096,29 +2754,8 @@ paths:
               - stream
             default: download
       responses:
-        "200":
-          description: Successful response.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  headers:
-                    type: object
-                    properties:
-                      status:
-                        type: string
-                      code:
-                        type: string
-                      error_message:
-                        type: string
-                      warnings:
-                        type: string
-                  results:
-                    type: array
-                    items:
-                      type: object
-                      properties: {}
+        "302":
+          description: Redirect to the requested file. No JSON body is returned.
         default:
           description: Error response.
           content:

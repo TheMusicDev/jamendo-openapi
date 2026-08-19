@@ -1,7 +1,7 @@
 {
     "operationId": "getPlaylists",
     "method": "GET",
-    "path": "/playlists",
+    "path": "/playlists/tracks",
     "authType": "apikey",
     "summary": "Retrieve playlists with optional filters and track details",
     "description": "Returns a playlist entity containing the list of belonging tracks. Includes the new 'audiodownload_allowed' boolean to indicate if a track can be downloaded. If 'audiodownload_allowed' is false, the 'audiodownload' field will be returned as an empty string (as of April 2022). Use the 'track_type' parameter to include singles or album tracks. At least one of id, name, user_id, access_token, or user_name must be provided together with the required client_id.",
