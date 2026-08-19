@@ -1,7 +1,7 @@
 {
     "operationId": "getArtists",
     "method": "GET",
-    "path": "/artists",
+    "path": "/artists/albums",
     "authType": "apikey",
     "summary": "Retrieve artists and their albums with filtering options",
     "description": "Returns a list of artists (optionally with their albums) and allows filtering, sorting and pagination. The `client_id` query parameter is required. Use `fullcount=true` only when necessary as it may impact performance. The `callback` parameter works only with JSON responses and GET requests.",

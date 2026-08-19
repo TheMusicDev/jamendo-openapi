@@ -1,7 +1,7 @@
 {
     "operationId": "listReviews",
     "method": "GET",
-    "path": "/reviews",
+    "path": "/reviews/tracks",
     "authType": "apikey",
     "summary": "Browse and filter track reviews",
     "description": "Returns a list of track reviews with optional filtering, sorting and pagination. Includes new boolean field 'track_audiodownload_allowed' indicating if download is permitted, and note that 'track_audiodownload' will be empty when this flag is false.",

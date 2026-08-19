@@ -1,7 +1,7 @@
 {
     "operationId": "listArtists",
     "method": "GET",
-    "path": "/artists",
+    "path": "/artists/tracks",
     "authType": "apikey",
     "summary": "Retrieve a list of artists with optional track sub‑entities",
     "description": "Returns artists and, for each artist, a sub‑entity containing its tracks. Supports filtering, ordering and pagination. Includes the new 'audiodownload_allowed' boolean on tracks and notes that the 'audiodownload' field may be empty when downloads are not allowed.",

@@ -1,7 +1,7 @@
 {
     "operationId": "listReviews",
     "method": "GET",
-    "path": "/reviews",
+    "path": "/reviews/albums",
     "authType": "apikey",
     "summary": "Filter and browse album reviews.",
     "description": "Returns a list of album reviews with possible fields such as the number of agreements (agreecnt), the user-assigned score, review text and title. The only mandatory parameter is client_id; other parameters are optional and allow pagination, formatting, sorting and filtering of results.",
