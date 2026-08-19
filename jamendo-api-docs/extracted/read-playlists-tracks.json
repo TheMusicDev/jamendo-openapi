@@ -1,0 +1,215 @@
+{
+    "operationId": "getPlaylists",
+    "method": "GET",
+    "path": "/playlists",
+    "authType": "apikey",
+    "summary": "Retrieve playlists with optional filters and track details",
+    "description": "Returns a playlist entity containing the list of belonging tracks. Includes the new 'audiodownload_allowed' boolean to indicate if a track can be downloaded. If 'audiodownload_allowed' is false, the 'audiodownload' field will be returned as an empty string (as of April 2022). Use the 'track_type' parameter to include singles or album tracks. At least one of id, name, user_id, access_token, or user_name must be provided together with the required client_id.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com."
+        },
+        {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "type": "enum",
+            "enumValues": ["xml", "json", "jsonpretty"],
+            "defaultValue": null,
+            "description": "The results formatting type."
+        },
+        {
+            "name": "callback",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Wrap the JSON response in a callback function (JSONP). Only works with json format and GET requests."
+        },
+        {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The position to start returning results from."
+        },
+        {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The max number of results to return. Default is 10, max 200. Using 'all' still caps at 200."
+        },
+        {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "enumValues": [
+                "name",
+                "id",
+                "creationdate",
+                "track_id",
+                "track_name",
+                "track_added_date",
+                "track_position"
+            ],
+            "defaultValue": null,
+            "description": "Sort results by the queried field(s). Append '_asc' or '_desc' for direction. Ascending is default."
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, adds 'results_fullcount' in the header indicating total rows without limit/offset. Use sparingly due to performance impact."
+        },
+        {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more playlist IDs."
+        },
+        {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A playlist name."
+        },
+        {
+            "name": "namesearch",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Search a playlist by name (playlist_name matching *searchquery*)."
+        },
+        {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more author IDs (no access token required)."
+        },
+        {
+            "name": "access_token",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A valid OAuth2 access token for the Jamendo user."
+        },
+        {
+            "name": "user_name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more user names."
+        },
+        {
+            "name": "datebetween",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Filter playlists created between two dates. Format 'from_to' (both integers)."
+        },
+        {
+            "name": "audioformat",
+            "in": "query",
+            "required": false,
+            "type": "enum",
+            "enumValues": ["mp31", "mp32", "ogg", "flac"],
+            "defaultValue": "mp31",
+            "description": "Audio format for the 'audio' field. Default is mp31 if omitted."
+        },
+        {
+            "name": "track_type",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "enumValues": ["single", "albumtrack"],
+            "defaultValue": null,
+            "description": "Select tracks of a certain type. Default returns only albumtracks."
+        },
+        {
+            "name": "imagesize",
+            "in": "query",
+            "required": false,
+            "type": "enum",
+            "enumValues": [
+                "25",
+                "35",
+                "50",
+                "55",
+                "60",
+                "65",
+                "70",
+                "75",
+                "85",
+                "100",
+                "130",
+                "150",
+                "200",
+                "300",
+                "400",
+                "500",
+                "600"
+            ],
+            "defaultValue": null,
+            "description": "Desired cover image size in pixels."
+        },
+        {
+            "name": "positionbetween",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Filter on the track position in the playlist. Format 'from_to' (both integers)."
+        },
+        {
+            "name": "audiodlformat",
+            "in": "query",
+            "required": false,
+            "type": "enum",
+            "enumValues": ["mp31", "mp32", "ogg", "flac"],
+            "defaultValue": null,
+            "description": "Audio download format for the 'audiodownload' field. Defaults to audioformat or mp32."
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [],
+    "notes": [
+        "The 'audiodownload_allowed' field (boolean) indicates if a track can be downloaded via your app.",
+        "If 'audiodownload_allowed' is false, the 'audiodownload' field will be returned as an empty string (effective April 2022).",
+        "At least one of id, name, user_id, access_token, or user_name must be supplied together with client_id.",
+        "Array parameters (e.g., id, user_id, track_type) can be provided as comma‑separated values."
+    ]
+}

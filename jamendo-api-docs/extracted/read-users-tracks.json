@@ -1,0 +1,197 @@
+{
+    "operationId": "getUserTracks",
+    "method": "GET",
+    "path": "/users/tracks",
+    "authType": "apikey",
+    "summary": "Retrieve tracks liked, favorited, or reviewed by a user",
+    "description": "Returns a list of tracks associated with a user based on the selected relations (like, favorite, review). Supports pagination, sorting, filtering by track type, and audio format options. Either a user id or a valid access token must be supplied alongside the required client_id. The 'audiodownload_allowed' field indicates if the track can be downloaded; if false, the 'audiodownload' field will be an empty string.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com."
+        },
+        {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["xml", "json", "jsonpretty"],
+            "defaultValue": null,
+            "description": "The results formatting type"
+        },
+        {
+            "name": "callback",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Wrap response in a JSONP callback (only for json format and GET requests)"
+        },
+        {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The position to start returning results from"
+        },
+        {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Maximum number of results to return (default 10, max 200, 'all' caps at 200)"
+        },
+        {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["updatedate", "rating"],
+            "defaultValue": null,
+            "description": "Sorting order: 'updatedate' by last interaction date, or 'rating' by combined relevance"
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, includes the total result count in the header (affects performance)"
+        },
+        {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "User id (one of id or access_token must be provided)"
+        },
+        {
+            "name": "access_token",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "OAuth2 token for the Jamendo user"
+        },
+        {
+            "name": "imagesize",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["30", "50", "100"],
+            "defaultValue": null,
+            "description": "User avatar size in pixels"
+        },
+        {
+            "name": "track_type",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["single", "albumtrack"],
+            "defaultValue": null,
+            "description": "Filter by track type; default returns only album tracks"
+        },
+        {
+            "name": "track_id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more track IDs to filter"
+        },
+        {
+            "name": "artist_id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more artist IDs to filter"
+        },
+        {
+            "name": "album_id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more album IDs to filter"
+        },
+        {
+            "name": "audioformat",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["mp31", "mp32", "ogg", "flac"],
+            "defaultValue": "mp31",
+            "description": "Audio format for the 'audio' field"
+        },
+        {
+            "name": "audiodlformat",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["mp31", "mp32", "ogg", "flac"],
+            "defaultValue": null,
+            "description": "Audio download format for the 'audiodownload' field"
+        },
+        {
+            "name": "album_imagesize",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": [
+                "25",
+                "35",
+                "50",
+                "55",
+                "60",
+                "65",
+                "70",
+                "75",
+                "85",
+                "100",
+                "130",
+                "150",
+                "200",
+                "300",
+                "400",
+                "500",
+                "600"
+            ],
+            "defaultValue": null,
+            "description": "Cover image size in pixels"
+        },
+        {
+            "name": "relation",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["like", "favorite", "review"],
+            "defaultValue": null,
+            "description": "Select which user relations to include (like, favorite, review). If omitted, all are considered."
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [],
+    "notes": [
+        "Either the 'id' parameter or a valid 'access_token' must be supplied; both can be omitted only if the endpoint is called with anonymous client_id (which returns public data only).",
+        "When 'audiodownload_allowed' is false, the 'audiodownload' field will be an empty string.",
+        "The 'track_type' parameter defaults to 'albumtrack' to avoid issues with older applications."
+    ]
+}

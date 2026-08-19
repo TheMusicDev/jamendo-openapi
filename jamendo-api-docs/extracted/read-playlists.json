@@ -1,0 +1,151 @@
+{
+    "operationId": "getPlaylists",
+    "method": "GET",
+    "path": "/playlists",
+    "authType": "apikey",
+    "summary": "Retrieve playlists with optional filtering",
+    "description": "Returns a list of playlists matching the supplied filters. The 'zip' field contains a URL to download the playlist's tracks as a high‑quality MP3 zip, but the zip may contain fewer tracks than the playlist (internal limit of about 100 tracks). Requires a client_id; an access_token can be supplied for user‑specific data.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com."
+        },
+        {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["xml", "json", "jsonpretty"],
+            "defaultValue": null,
+            "description": "The results formatting type."
+        },
+        {
+            "name": "callback",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Wraps the JSON response in a callback function (JSONP). Only works with json format and GET requests."
+        },
+        {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The position to start returning results from."
+        },
+        {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": "10",
+            "description": "Maximum number of results to return. Default 10, max 200; 'all' still caps at 200."
+        },
+        {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "enumValues": ["name", "id", "creationdate"],
+            "defaultValue": null,
+            "description": "Sort results by field(s). Append _asc or _desc for direction; ascending is default."
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, adds 'results_fullcount' header with total rows ignoring limit/offset (performance impact)."
+        },
+        {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more playlist IDs."
+        },
+        {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Playlist name."
+        },
+        {
+            "name": "namesearch",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Search playlist by name using wildcard matching."
+        },
+        {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more author IDs (no access token required)."
+        },
+        {
+            "name": "access_token",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "OAuth2 access token for the Jamendo user."
+        },
+        {
+            "name": "user_name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more user names."
+        },
+        {
+            "name": "datebetween",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Created between dates. Format: from_to (both integers)."
+        },
+        {
+            "name": "audioformat",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["mp32"],
+            "defaultValue": null,
+            "description": "Audio format for file URLs; currently only mp32 (mp3 192kbps)."
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [],
+    "notes": [
+        "The 'zip' field in the response may contain fewer tracks than the playlist due to a server‑side limit of ~100 tracks.",
+        "If both 'client_id' and 'access_token' are supplied, the access token is used for user‑specific data while client_id satisfies the required API key."
+    ]
+}

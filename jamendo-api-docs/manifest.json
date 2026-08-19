@@ -1,0 +1,134 @@
+{
+    "docs": {
+        "hash": "d9dc05b461380b8e394beaafc08f4539",
+        "fetchedAt": "2026-08-18T20:41:30.335Z"
+    },
+    "authentication": {
+        "hash": "c8c62d8602a72fec5b736719dee34771",
+        "fetchedAt": "2026-08-18T20:41:37.885Z"
+    },
+    "response-codes": {
+        "hash": "74f41523b93ea0e151687e4ede8c24e9",
+        "fetchedAt": "2026-08-18T20:41:45.422Z"
+    },
+    "albums": {
+        "hash": "f7dd52f673a13ac2ccc7a2310eb0d72e",
+        "fetchedAt": "2026-08-18T20:41:52.623Z"
+    },
+    "albums/file": {
+        "hash": "2348c336a78f7c6d63e0e6e0239f17f7",
+        "fetchedAt": "2026-08-18T20:42:00.121Z"
+    },
+    "albums/tracks": {
+        "hash": "fd8ebbf1b42e0eb71e862874a9603e56",
+        "fetchedAt": "2026-08-18T20:42:07.744Z"
+    },
+    "albums/musicinfo": {
+        "hash": "b0032d2457ed0175be27f33c5799c10d",
+        "fetchedAt": "2026-08-18T20:42:15.293Z"
+    },
+    "artists": {
+        "hash": "dbd72baed6733c3d0dbaceaee426b030",
+        "fetchedAt": "2026-08-18T20:42:22.654Z"
+    },
+    "artists/tracks": {
+        "hash": "be2570b4aace3d8540e30b239e773ef7",
+        "fetchedAt": "2026-08-18T20:42:30.421Z"
+    },
+    "artists/albums": {
+        "hash": "a7eb16522091f461f4a61cda332596b4",
+        "fetchedAt": "2026-08-18T20:42:37.916Z"
+    },
+    "artists/locations": {
+        "hash": "9108223d9ab0fbe74e55f0f78206665a",
+        "fetchedAt": "2026-08-18T20:42:45.267Z"
+    },
+    "artists/musicinfo": {
+        "hash": "0221c118136eea2ec49d99863181b67b",
+        "fetchedAt": "2026-08-18T20:42:52.714Z"
+    },
+    "autocomplete": {
+        "hash": "31573037d1a5f3e3e250d2313317852b",
+        "fetchedAt": "2026-08-18T20:50:16.325Z"
+    },
+    "feeds": {
+        "hash": "a929cb8cf2fb8a6b8c4f20e8aaa38f7a",
+        "fetchedAt": "2026-08-18T20:43:07.801Z"
+    },
+    "playlists": {
+        "hash": "0bff8218204b61a5624460d79feeb12d",
+        "fetchedAt": "2026-08-18T20:43:15.370Z"
+    },
+    "playlists/file": {
+        "hash": "7a7ac792793875799bcf62b6f73b9272",
+        "fetchedAt": "2026-08-18T20:43:22.619Z"
+    },
+    "playlists/tracks": {
+        "hash": "c578834556a6c303a4fb2c31b91fb88c",
+        "fetchedAt": "2026-08-18T20:43:30.189Z"
+    },
+    "radios": {
+        "hash": "db8ab2e4b1d2144805e1332f47c5c01d",
+        "fetchedAt": "2026-08-18T20:43:37.913Z"
+    },
+    "radios/stream": {
+        "hash": "357ec0003cab644b2a5b90ef5c8b5355",
+        "fetchedAt": "2026-08-18T20:43:45.144Z"
+    },
+    "reviews/albums": {
+        "hash": "98c98fc61a2a5fc4f54c41c161a8f31b",
+        "fetchedAt": "2026-08-18T20:43:52.658Z"
+    },
+    "reviews/tracks": {
+        "hash": "e60569119b634104403a65b14c935fae",
+        "fetchedAt": "2026-08-18T20:44:00.266Z"
+    },
+    "tracks": {
+        "hash": "3781161449d7973c269da17a4cc87e3a",
+        "fetchedAt": "2026-08-18T20:50:23.820Z"
+    },
+    "tracks/file": {
+        "hash": "4bc7b5e67a4c7cc491fc635dca622d3e",
+        "fetchedAt": "2026-08-18T20:44:15.219Z"
+    },
+    "tracks/similar": {
+        "hash": "351c253a28603b47e8b131d5b00f4e9f",
+        "fetchedAt": "2026-08-18T20:44:22.680Z"
+    },
+    "users": {
+        "hash": "4d497a78c60e174e4da599d2de0ce8fb",
+        "fetchedAt": "2026-08-18T20:44:30.429Z"
+    },
+    "users/artists": {
+        "hash": "672f343cd8160f3758801b229ff7a485",
+        "fetchedAt": "2026-08-18T20:44:37.761Z"
+    },
+    "users/albums": {
+        "hash": "9c1743b60f0ee001aeadf03ec053c1d6",
+        "fetchedAt": "2026-08-18T20:44:45.254Z"
+    },
+    "users/tracks": {
+        "hash": "17aee93ffd398334f72d27a685a958b9",
+        "fetchedAt": "2026-08-18T20:44:52.789Z"
+    },
+    "setuser/fan": {
+        "hash": "c43ede421fcb78599db2ab5071a09ac4",
+        "fetchedAt": "2026-08-18T20:45:00.148Z"
+    },
+    "setuser/favorite": {
+        "hash": "385339f37898215976b9b6d1670b4b84",
+        "fetchedAt": "2026-08-18T20:45:07.672Z"
+    },
+    "setuser/like": {
+        "hash": "711e02c77c190e71a36392042a2b6b93",
+        "fetchedAt": "2026-08-18T20:45:15.355Z"
+    },
+    "setuser/dislike": {
+        "hash": "e9012eb30696b1b861ce92d5c95ddaf0",
+        "fetchedAt": "2026-08-18T20:45:22.813Z"
+    },
+    "setuser/myalbum": {
+        "hash": "bd3d0bb2edd55b5525f0ef1fc68ac94f",
+        "fetchedAt": "2026-08-18T20:45:30.156Z"
+    }
+}

@@ -1,0 +1,44 @@
+{
+    "operationId": "getAlbumFile",
+    "method": "GET",
+    "path": "/albums/file",
+    "authType": "apikey",
+    "summary": "Redirect to the downloadable album file URL",
+    "description": "Returns an HTTP redirect to the requested album file. The request must include a valid client_id and an album id. The optional audioformat parameter selects the audio encoding (currently only mp3). Starting April 2022, a 404 error is returned if the album's 'zip_allowed' flag is false. This endpoint does not inherit the usual parent parameter declarations and returns no JSON body, only a redirect response.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com"
+        },
+        {
+            "name": "audioformat",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["mp3"],
+            "defaultValue": null,
+            "description": "The audio format for the file URL. Currently only 'mp3' (192kbps) is supported."
+        },
+        {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Album identifier for which the file should be downloaded."
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [],
+    "notes": [
+        "The response is an HTTP 302 redirect to the actual file URL; no JSON payload is returned.",
+        "'zip_allowed' flag is now included in other album endpoints; if false, this endpoint will return a 404.",
+        "Ensure your application follows redirects to obtain the file."
+    ]
+}

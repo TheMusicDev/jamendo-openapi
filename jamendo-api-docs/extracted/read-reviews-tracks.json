@@ -1,0 +1,216 @@
+{
+    "operationId": "listReviews",
+    "method": "GET",
+    "path": "/reviews",
+    "authType": "apikey",
+    "summary": "Browse and filter track reviews",
+    "description": "Returns a list of track reviews with optional filtering, sorting and pagination. Includes new boolean field 'track_audiodownload_allowed' indicating if download is permitted, and note that 'track_audiodownload' will be empty when this flag is false.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com."
+        },
+        {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["xml", "json", "jsonpretty"],
+            "defaultValue": null,
+            "description": "The results formatting type."
+        },
+        {
+            "name": "callback",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Wrap the JSON response in a callback function (JSONP). Only works with json format and GET requests."
+        },
+        {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The position to start returning results from."
+        },
+        {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": "10",
+            "description": "Maximum number of results to return. Default 10, max 200. Keyword 'all' still limited to 200 rows."
+        },
+        {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["addeddate", "score", "id"],
+            "defaultValue": null,
+            "description": "Sort results by field(s). Append _asc or _desc for direction; default is ascending."
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, adds 'results_fullcount' header with total rows ignoring limit/offset. Use sparingly as it impacts performance."
+        },
+        {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more review IDs."
+        },
+        {
+            "name": "lang",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Review language code (e.g., \"en\", \"fr\")."
+        },
+        {
+            "name": "datebetween",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Closed interval filter for review dates formatted as \"yyyy-mm-dd_yyyy-mm-dd\"."
+        },
+        {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more user IDs (no token required)."
+        },
+        {
+            "name": "access_token",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "OAuth2 access token for the Jamendo user."
+        },
+        {
+            "name": "hasscore",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Filter reviews that have (or do not have) a score."
+        },
+        {
+            "name": "track_id",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more track IDs."
+        },
+        {
+            "name": "album_id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "An album ID to filter reviews."
+        },
+        {
+            "name": "artist_id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "An artist ID to filter reviews."
+        },
+        {
+            "name": "audioformat",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["mp31", "mp32", "ogg", "flac"],
+            "defaultValue": "mp31",
+            "description": "Audio format for the 'audio' field. Default mp31."
+        },
+        {
+            "name": "audiodlformat",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["mp31", "mp32", "ogg", "flac"],
+            "defaultValue": null,
+            "description": "Audio download format for the 'audiodownload' field. Defaults to audioformat, otherwise mp32."
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [
+        {
+            "name": "id",
+            "type": "integer",
+            "nullable": false,
+            "description": "Review identifier."
+        },
+        {
+            "name": "agreecnt",
+            "type": "integer",
+            "nullable": false,
+            "description": "Number of agreements on the review."
+        },
+        {
+            "name": "score",
+            "type": "integer",
+            "nullable": true,
+            "description": "Score assigned by the reviewer."
+        },
+        {
+            "name": "title",
+            "type": "string",
+            "nullable": true,
+            "description": "Title of the review."
+        },
+        {
+            "name": "text",
+            "type": "string",
+            "nullable": true,
+            "description": "Full text of the review."
+        },
+        {
+            "name": "track_audiodownload_allowed",
+            "type": "boolean",
+            "nullable": false,
+            "description": "Indicates whether the track can be offered for download via the API."
+        }
+    ],
+    "notes": [
+        "Since Feb 2021 the field 'track_audiodownload_allowed' is always returned.",
+        "From Apr 2022, if 'track_audiodownload_allowed' is false, the 'track_audiodownload' field will be an empty string.",
+        "Using 'fullcount=true' may impact performance and is not available on some heavy methods."
+    ]
+}

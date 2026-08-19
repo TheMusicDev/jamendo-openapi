@@ -1,0 +1,128 @@
+{
+    "operationId": "autocomplete",
+    "method": "GET",
+    "path": "/autocomplete",
+    "authType": "apikey",
+    "summary": "Autocomplete search across tracks, albums, artists and tags.",
+    "description": "Returns a list of matching entities (tracks, albums, artists, tags) for the given prefix. By default all four entities are searched, but you can limit the search with the 'entity' parameter. The 'matchcount' flag adds a count of matches per entity. The endpoint does not return entity IDs; lookups must be performed by name, which may not be unique. The 'prefix' must be at least 2 characters long and the request is limited by the 'limit' parameter. Callback wrapping is only supported for JSON responses.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com."
+        },
+        {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["xml", "json", "jsonpretty"],
+            "defaultValue": null,
+            "description": "The results formatting type."
+        },
+        {
+            "name": "callback",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Wraps the JSON response in a callback function (JSONP). Only works with json format and GET requests."
+        },
+        {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Maximum number of results to return per entity."
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, the document header includes 'results_fullcount' with the total number of rows without limit/offset."
+        },
+        {
+            "name": "prefix",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "String to search as a prefix of an entity name. Minimum length is 2 characters."
+        },
+        {
+            "name": "entity",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["artists", "albums", "tracks", "tags"],
+            "defaultValue": null,
+            "description": "Restricts the autocomplete search to the specified entity types. If omitted, all entities are searched."
+        },
+        {
+            "name": "matchcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, includes the count of matches for each returned item. Default is false."
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [
+        {
+            "name": "headers",
+            "type": "object",
+            "nullable": false,
+            "description": "Metadata about the request status, code, and result counts."
+        },
+        {
+            "name": "results",
+            "type": "object",
+            "nullable": false,
+            "description": "Autocomplete matches grouped by entity."
+        },
+        {
+            "name": "results.tags",
+            "type": "array",
+            "nullable": true,
+            "description": "Array of tag matches, each with 'match' and 'count'."
+        },
+        {
+            "name": "results.artists",
+            "type": "array",
+            "nullable": true,
+            "description": "Array of artist matches, each with 'match' and 'count'."
+        },
+        {
+            "name": "results.albums",
+            "type": "array",
+            "nullable": true,
+            "description": "Array of album matches, each with 'match' and 'count'."
+        },
+        {
+            "name": "results.tracks",
+            "type": "array",
+            "nullable": true,
+            "description": "Array of track matches, each with 'match' and 'count'."
+        }
+    ],
+    "notes": [
+        "The endpoint does not return IDs for matched entities; subsequent lookups must use names, which may not be unique.",
+        "'matchcount' defaults to false and adds extra data to the payload.",
+        "The 'entity' parameter accepts multiple values; provide a comma‑separated list (e.g., entity=artists,tracks).",
+        "'limit' is treated as a string in the documentation but represents an integer.",
+        "The 'callback' parameter is ignored for non‑JSON formats and for POST requests."
+    ]
+}

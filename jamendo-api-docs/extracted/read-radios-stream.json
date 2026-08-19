@@ -1,0 +1,98 @@
+{
+    "operationId": "getRadioStream",
+    "method": "GET",
+    "path": "/radios/stream",
+    "authType": "apikey",
+    "summary": "Retrieve streaming URL and current track info for a Jamendo radio",
+    "description": "Returns the streaming URL for a given radio (by id or name), along with the currently playing track information and timing details. Note: the stream link returned is currently not working and may never be fixed. Requires a valid client_id and either a radio id or name.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com."
+        },
+        {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["xml", "json", "jsonpretty"],
+            "defaultValue": null,
+            "description": "The results formatting type."
+        },
+        {
+            "name": "callback",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Wraps the JSON response in a callback function for JSONP (only works with json format and GET requests)."
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, adds 'results_fullcount' to the header indicating total rows without limit/offset."
+        },
+        {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A radio id. Either id or name must be provided."
+        },
+        {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["www", "pro"],
+            "defaultValue": null,
+            "description": "Radio type: 'www' for public radios, 'pro' for commercial radios."
+        },
+        {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A radio name (unique identifier). Either name or id must be provided."
+        },
+        {
+            "name": "imagesize",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["150", "30"],
+            "defaultValue": null,
+            "description": "The radio image size in pixels."
+        },
+        {
+            "name": "track_imagesize",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The cover size in pixels for tracks."
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [],
+    "notes": [
+        "The stream link returned is currently broken and may never be fixed.",
+        "Either 'id' or 'name' must be supplied; both together are not required.",
+        "Performance impact: avoid using 'fullcount' on heavy methods."
+    ]
+}

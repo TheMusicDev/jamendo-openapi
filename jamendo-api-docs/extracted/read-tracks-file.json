@@ -1,0 +1,63 @@
+{
+    "operationId": "getTrackFile",
+    "method": "GET",
+    "path": "/tracks/file",
+    "authType": "apikey",
+    "summary": "Redirect to the requested audio file for a track",
+    "description": "Returns an HTTP redirect to the audio file URL for a given track. The endpoint accepts a limited set of query parameters and does not inherit the usual parent parameters. If the track's 'audiodownload_allowed' flag is false, the request will result in a 404 error. The default action is 'download' and the default audio format is 'mp31'.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com."
+        },
+        {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The unique identifier of the track to retrieve. Only one track id is accepted."
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, the response header includes 'results_fullcount' with the total number of rows that would be returned without limit/offset."
+        },
+        {
+            "name": "audioformat",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["mp31", "mp32", "ogg", "flac"],
+            "defaultValue": "mp31",
+            "description": "Desired audio format for the returned file. Defaults to mp31 if not specified."
+        },
+        {
+            "name": "action",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["download", "stream"],
+            "defaultValue": "download",
+            "description": "Specifies whether the request is for streaming or downloading; helps server optimize handling."
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [],
+    "notes": [
+        "The endpoint performs an HTTP redirect; no JSON body is returned.",
+        "A 404 error is returned when 'audiodownload_allowed' (or 'track_audiodownload_allowed') is false for the requested track.",
+        "Only the parameters listed above are accepted; standard parent parameters are not inherited.",
+        "The 'client_id' parameter is mandatory for authentication; ensure it is valid."
+    ]
+}

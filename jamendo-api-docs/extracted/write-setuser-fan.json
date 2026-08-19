@@ -1,0 +1,61 @@
+{
+    "operationId": "setUserFan",
+    "method": "POST",
+    "path": "/setuser/fan",
+    "authType": "oauth2",
+    "summary": "Make a user become a fan of an artist",
+    "description": "Allows the user identified by `user_id` (derived from the access token) to become a fan of the artist identified by `artist_id`. If the artist does not exist, no error is raised but the fan relationship will not appear in read requests. Requires a valid client_id and OAuth2 access token with the `music` scope.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com"
+        },
+        {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["xml", "json", "jsonpretty"],
+            "defaultValue": null,
+            "description": "The results formatting type"
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, adds 'results_fullcount' to the header (performance‑heavy, use only when needed)"
+        },
+        {
+            "name": "access_token",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A valid OAuth2 access token (music scope) for the Jamendo user to be updated"
+        },
+        {
+            "name": "artist_id",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Identifier of the artist to become a fan of"
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [],
+    "notes": [
+        "If the specified artist does not exist, the request succeeds silently and no fan relationship is created.",
+        "`fullcount` can impact performance and is not available on all heavy methods."
+    ]
+}

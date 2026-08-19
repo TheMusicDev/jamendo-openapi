@@ -1,0 +1,44 @@
+{
+    "operationId": "getPlaylistFile",
+    "method": "GET",
+    "path": "/playlists/file",
+    "authType": "apikey",
+    "summary": "Redirect to a playlist file URL",
+    "description": "Returns an HTTP 302 redirect to the requested playlist file. This endpoint does not inherit the standard parent parameters; only client_id and id are required. An invalid request results in HTTP 404 or 500 errors. The audioformat parameter currently only supports 'mp3'.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com."
+        },
+        {
+            "name": "audioformat",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["mp3"],
+            "defaultValue": null,
+            "description": "The audio format for the file URL. Currently only 'mp3' (192kbps) is supported."
+        },
+        {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The album ID for which the file redirect is requested."
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [],
+    "notes": [
+        "The endpoint performs an HTTP redirect rather than returning a JSON payload.",
+        "Only the 'mp3' audioformat is available at this time.",
+        "A missing or invalid client_id or id will result in a 404 or 500 error."
+    ]
+}

@@ -1,0 +1,188 @@
+{
+    "operationId": "listAlbums",
+    "method": "GET",
+    "path": "/albums",
+    "authType": "apikey",
+    "summary": "Retrieve a filtered list of album entities.",
+    "description": "Select and filter album entities, returning the main fields concerning albums. Includes the new 'zip_allowed' boolean indicating whether a download zip is permitted and notes that the 'zip' field will be empty when 'zip_allowed' is false. Supports pagination, ordering, and various search filters.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com."
+        },
+        {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["xml", "json", "jsonpretty"],
+            "defaultValue": null,
+            "description": "The results formatting type."
+        },
+        {
+            "name": "callback",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Wrap JSON response in a callback function (JSONP). Only works with json format and GET requests."
+        },
+        {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The position to start returning results from."
+        },
+        {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": "10",
+            "description": "Maximum number of results to return. Default is 10, max 200. Using 'all' still caps at 200."
+        },
+        {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": [
+                "name",
+                "id",
+                "releasedate",
+                "artist_id",
+                "artist_name",
+                "popularity_total",
+                "popularity_month",
+                "popularity_week"
+            ],
+            "defaultValue": null,
+            "description": "Sort results by the queried field(s). Append _asc or _desc to specify order (ascending is default, rating fields default to descending)."
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, the response header includes 'results_fullcount' (total rows without limit/offset). Use sparingly as it impacts performance."
+        },
+        {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more album IDs (comma‑separated)."
+        },
+        {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Filter by exact album name."
+        },
+        {
+            "name": "namesearch",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Search album names using wildcard (*searchquery*)."
+        },
+        {
+            "name": "artist_id",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more artist IDs (comma‑separated)."
+        },
+        {
+            "name": "artist_name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Filter by artist name."
+        },
+        {
+            "name": "datebetween",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Filter albums released between two dates (format yyyy-mm-dd_yyyy-mm-dd)."
+        },
+        {
+            "name": "imagesize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": [
+                "25",
+                "35",
+                "50",
+                "55",
+                "60",
+                "65",
+                "70",
+                "75",
+                "85",
+                "100",
+                "130",
+                "150",
+                "200",
+                "300",
+                "400",
+                "500",
+                "600"
+            ],
+            "defaultValue": null,
+            "description": "Desired cover image size in pixels."
+        },
+        {
+            "name": "audioformat",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["mp32"],
+            "defaultValue": null,
+            "description": "Audio format for file URLs; only 'mp32' (mp3 192kbps) is supported."
+        },
+        {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["single", "album"],
+            "defaultValue": null,
+            "description": "Select releases of a certain type. Defaults to both albums and singles."
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [],
+    "notes": [
+        "Since February 2021 the response includes a boolean field 'zip_allowed' indicating if a download zip can be offered.",
+        "From April 2022, if 'zip_allowed' is false the 'zip' field will be an empty string.",
+        "The endpoint does not include the version prefix in the path; use '/albums' as shown."
+    ]
+}

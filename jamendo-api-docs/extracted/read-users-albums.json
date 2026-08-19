@@ -1,0 +1,161 @@
+{
+    "operationId": "getUserAlbums",
+    "method": "GET",
+    "path": "/users/albums",
+    "authType": "apikey",
+    "summary": "Retrieve the albums a user has added to their MyAlbums collection",
+    "description": "Returns the list of Jamendo albums that a specific user has added to their MyAlbums relation. The request requires a client_id and at least one of id, access_token, or name to identify the user. Optional filters allow limiting, ordering, and selecting image sizes. The 'relation' parameter currently only supports 'myalbums'.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com."
+        },
+        {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["xml", "json", "jsonpretty"],
+            "defaultValue": null,
+            "description": "The results formatting type."
+        },
+        {
+            "name": "callback",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Wraps the JSON response in a callback function (JSONP). Only works with json format and GET requests."
+        },
+        {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The position to start returning results from."
+        },
+        {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Maximum number of results to return (default 10, max 200). The keyword 'all' is capped at 200."
+        },
+        {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["updatedate"],
+            "defaultValue": null,
+            "description": "Sort results by the queried field(s). Append _asc or _desc for direction; ascending is default."
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, includes 'results_fullcount' in the header (performance‑intensive; not available on heavy methods)."
+        },
+        {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more user IDs (no access token required)."
+        },
+        {
+            "name": "access_token",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "OAuth2 access token for the Jamendo user."
+        },
+        {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more user names."
+        },
+        {
+            "name": "imagesize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": ["30", "50", "100"],
+            "defaultValue": null,
+            "description": "User avatar size in pixels."
+        },
+        {
+            "name": "album_id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more album IDs."
+        },
+        {
+            "name": "album_imagesize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": [
+                "25",
+                "35",
+                "50",
+                "55",
+                "60",
+                "65",
+                "70",
+                "75",
+                "85",
+                "100",
+                "130",
+                "150",
+                "200",
+                "300",
+                "400",
+                "500",
+                "600"
+            ],
+            "defaultValue": null,
+            "description": "Album cover size in pixels."
+        },
+        {
+            "name": "relation",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["myalbums"],
+            "defaultValue": "myalbums",
+            "description": "Relation type; currently only 'myalbums' is supported."
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [],
+    "notes": [
+        "client_id is mandatory; you must also supply at least one of id, access_token, or name to identify the user.",
+        "The 'order' field currently only accepts 'updatedate' but may support additional fields in the future.",
+        "Using 'fullcount' may impact performance and is not available for heavy endpoints."
+    ]
+}

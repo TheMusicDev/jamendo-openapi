@@ -1,0 +1,171 @@
+{
+    "operationId": "getArtists",
+    "method": "GET",
+    "path": "/artists",
+    "authType": "apikey",
+    "summary": "Retrieve artists and their albums with filtering options",
+    "description": "Returns a list of artists (optionally with their albums) and allows filtering, sorting and pagination. The `client_id` query parameter is required. Use `fullcount=true` only when necessary as it may impact performance. The `callback` parameter works only with JSON responses and GET requests.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com."
+        },
+        {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["xml", "json", "jsonpretty"],
+            "defaultValue": null,
+            "description": "The results formatting type."
+        },
+        {
+            "name": "callback",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Wrap the JSON response in a JavaScript callback (JSONP). Works only with JSON format and GET requests."
+        },
+        {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The position to start returning results from."
+        },
+        {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Maximum number of results to return. Default is 10, max 200. The keyword 'all' returns up to 200 rows."
+        },
+        {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "enumValues": [
+                "name",
+                "id",
+                "joindate",
+                "popularity_total",
+                "popularity_month",
+                "popularity_week",
+                "album_name",
+                "album_id",
+                "album_releasedate"
+            ],
+            "defaultValue": null,
+            "description": "Sort results by the specified field(s). Append `_asc` or `_desc` to set direction. Ascending is default, but popularity fields force descending."
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, response header includes `results_fullcount` with the total row count without pagination."
+        },
+        {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more artist IDs to filter."
+        },
+        {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Exact artist name to filter."
+        },
+        {
+            "name": "namesearch",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Search for artists containing the given substring."
+        },
+        {
+            "name": "hasimage",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["true", "1"],
+            "defaultValue": null,
+            "description": "Return only artists that have an image."
+        },
+        {
+            "name": "datebetween",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Filter artists by joining date. Format: yyyy-mm-dd_yyyy-mm-dd (from_to)."
+        },
+        {
+            "name": "album_id",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "One or more album IDs to filter."
+        },
+        {
+            "name": "album_name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Album name to filter."
+        },
+        {
+            "name": "album_datebetween",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Filter albums by release date. Format: yyyy-mm-dd_yyyy-mm-dd."
+        },
+        {
+            "name": "imagesize",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Size of the album cover image in pixels."
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [],
+    "notes": [
+        "The `order` parameter defaults to ascending; popularity fields always use descending order even if `_asc` is specified.",
+        "`fullcount` can degrade performance and is not available on heavy methods.",
+        "`callback` is ignored for non‑JSON formats or non‑GET requests."
+    ]
+}

@@ -1,0 +1,62 @@
+{
+    "operationId": "setUserDislike",
+    "method": "POST",
+    "path": "/setuser/dislike",
+    "authType": "oauth2",
+    "summary": "Dislike a track",
+    "description": "Allows a user to 'dislike' a track. Works similarly to the like endpoint but records a negative preference. Requires a valid client_id and an OAuth2 access_token with the 'music' scope.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com"
+        },
+        {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["xml", "json", "jsonpretty"],
+            "defaultValue": null,
+            "description": "The results formatting type"
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, the document header will contain 'results_fullcount' with the total number of rows without limit/offset. Use only when needed as it impacts performance."
+        },
+        {
+            "name": "access_token",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A valid access token (with 'music' scope) for the Jamendo user to update. Obtain via the OAuth2 process."
+        },
+        {
+            "name": "track_id",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Identifier of the track to dislike."
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [],
+    "notes": [
+        "The endpoint requires OAuth2 authentication; ensure the access token includes the 'music' scope.",
+        "Only the listed required parameters (client_id, access_token, track_id) must be supplied; others are optional.",
+        "The response format is controlled by the 'format' parameter; default is JSON if omitted."
+    ]
+}

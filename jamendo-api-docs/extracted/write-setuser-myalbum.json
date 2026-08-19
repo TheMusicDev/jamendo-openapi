@@ -1,0 +1,62 @@
+{
+    "operationId": "addAlbumToMyAlbums",
+    "method": "POST",
+    "path": "/setuser/myalbum",
+    "authType": "oauth2",
+    "summary": "Add an album to a user's myalbums list",
+    "description": "Adds the specified album to the authenticated user's list of favorite albums (myalbums). Requires both a client_id (API key) and a valid access_token with the 'music' scope. Optional parameters control response format and pagination metadata.",
+    "parameters": [
+        {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A Client Id provided by devportal.jamendo.com"
+        },
+        {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enumValues": ["xml", "json", "jsonpretty"],
+            "defaultValue": null,
+            "description": "The results formatting type"
+        },
+        {
+            "name": "fullcount",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "If true, includes the total number of rows in the header (results_fullcount). Use sparingly for performance reasons."
+        },
+        {
+            "name": "access_token",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A valid access token (with 'music' scope) for the Jamendo user to update"
+        },
+        {
+            "name": "album_id",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The ID of the album to add to the user's myalbums list"
+        }
+    ],
+    "requestBody": [],
+    "responseFields": [],
+    "notes": [
+        "Both client_id and access_token must be supplied; client_id acts as the API key.",
+        "The 'format' parameter defaults to json if omitted.",
+        "The endpoint does not include the version prefix in the path as per specification."
+    ]
+}
