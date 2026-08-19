@@ -42,8 +42,9 @@ const hashSourcePages = async (baseUrl: string, pages: typeof JAMENDO_DOC_SOURCE
             limiter.schedule(async (): Promise<PageWithHash> => {
                 const url = `${baseUrl}/${page.path}`;
                 try {
-                    const html = await (await fetch(url)).text();
-                    return { page, hash: hashContent(html) };
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error(`change-detection request failed with HTTP ${response.status}`);
+                    return { page, hash: hashContent(await response.text()) };
                 } catch (err) {
                     logger.debug({ url, err }, 'change-detection fetch failed, will re-scrape');
                     return { page, hash: undefined };
