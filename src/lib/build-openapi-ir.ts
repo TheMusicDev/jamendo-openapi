@@ -27,11 +27,10 @@ export const buildOpenApiIr = async (extractedDir: string): Promise<OpenApiIr> =
         const raw = await Bun.file(`${extractedDir}/${file}`).json();
         const parsed = JamendoEndpointSchema.safeParse(raw);
         if (!parsed.success) {
-            logger.error(
-                { file, issues: parsed.error.issues },
-                'extracted endpoint file failed schema validation, skipping'
+            logger.error({ file, issues: parsed.error.issues }, 'extracted endpoint file failed schema validation');
+            throw new Error(
+                `${file} failed schema validation -- refusing to build an OpenAPI spec missing this endpoint. Re-run extract-docs or fix the file by hand.`
             );
-            continue;
         }
         endpoints.push(parsed.data);
     }

@@ -97,6 +97,16 @@ const buildResponseSchema = (
     };
 };
 
+/**
+ * The `/*​/file` endpoints (tracks/file, albums/file, playlists/file) return
+ * an HTTP redirect to the actual file, not a JSON body -- their extracted
+ * responseFields is empty, but so is nearly every other endpoint's due to a
+ * separate extraction gap, so responseFields alone isn't a safe signal.
+ * The `/file` path suffix is Jamendo's own documented, stable convention
+ * for these three endpoints specifically.
+ */
+const isFileRedirectEndpoint = (endpoint: JamendoEndpoint): boolean => endpoint.path.endsWith('/file');
+
 const buildErrorSchema = (globalConfig: OpenApiIr['globalConfig']): Json => {
     const properties: Json = {};
     for (const field of globalConfig.errorFields) {
@@ -128,6 +138,20 @@ export const buildOpenApiDocument = (
         const verb = endpoint.method.toLowerCase();
 
         paths[endpoint.path] ??= {};
+        if (paths[endpoint.path][verb]) {
+            // The extraction data claims two different endpoints share the
+            // same (method, path) -- almost certainly an extraction bug
+            // (e.g. /artists/tracks extracted with path "/artists" instead
+            // of "/artists/tracks"), not a real duplicate route. Silently
+            // overwriting would drop a real endpoint from the spec with no
+            // trace, so fail loudly instead.
+            throw new Error(
+                `Duplicate ${endpoint.method} ${endpoint.path}: operationId "${operationId}" would overwrite ` +
+                    `an already-built operation for the same path+method. This usually means the extracted ` +
+                    `path is wrong for one of the colliding endpoints -- check jamendo-api-docs/extracted/ ` +
+                    `for files sharing this path and re-run extract-docs on the affected source page(s).`
+            );
+        }
         paths[endpoint.path][verb] = {
             operationId,
             summary: endpoint.summary,
@@ -162,18 +186,26 @@ export const buildOpenApiDocument = (
                       },
                   }
                 : {}),
-            responses: {
-                '200': {
-                    description: 'Successful response.',
-                    content: {
-                        'application/json': { schema: buildResponseSchema(endpoint, ir.globalConfig, idiom) },
-                    },
-                },
-                default: {
-                    description: 'Error response.',
-                    content: { 'application/json': { schema: buildErrorSchema(ir.globalConfig) } },
-                },
-            },
+            responses: isFileRedirectEndpoint(endpoint)
+                ? {
+                      '302': { description: 'Redirect to the requested file. No JSON body is returned.' },
+                      default: {
+                          description: 'Error response.',
+                          content: { 'application/json': { schema: buildErrorSchema(ir.globalConfig) } },
+                      },
+                  }
+                : {
+                      '200': {
+                          description: 'Successful response.',
+                          content: {
+                              'application/json': { schema: buildResponseSchema(endpoint, ir.globalConfig, idiom) },
+                          },
+                      },
+                      default: {
+                          description: 'Error response.',
+                          content: { 'application/json': { schema: buildErrorSchema(ir.globalConfig) } },
+                      },
+                  },
             ...(endpoint.notes.length > 0 ? { 'x-notes': endpoint.notes } : {}),
         };
     }
