@@ -3,14 +3,15 @@
     "method": "GET",
     "path": "/radios/stream",
     "authType": "apikey",
-    "summary": "Retrieve streaming URL and current track info for a Jamendo radio",
-    "description": "Returns the streaming URL for a given radio (by id or name), along with the currently playing track information and timing details. Note: the stream link returned is currently not working and may never be fixed. Requires a valid client_id and either a radio id or name.",
+    "summary": "Get streaming URL and current track information for a radio",
+    "description": "Returns the streaming URL for a Jamendo radio, along with a playingnow object describing the currently streamed track and a callmeback object indicating when the current track will end. Requires a client_id and either a radio id or a radio name. The stream link returned may no longer be functional.",
     "parameters": [
         {
             "name": "client_id",
             "in": "query",
             "required": true,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
             "description": "A Client Id provided by devportal.jamendo.com."
@@ -20,6 +21,7 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": ["xml", "json", "jsonpretty"],
             "defaultValue": null,
             "description": "The results formatting type."
@@ -29,51 +31,57 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "Wraps the JSON response in a callback function for JSONP (only works with json format and GET requests)."
+            "description": "JSONP callback function name (only works with format=json or jsonpretty)."
         },
         {
             "name": "fullcount",
             "in": "query",
             "required": false,
             "type": "boolean",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "If true, adds 'results_fullcount' to the header indicating total rows without limit/offset."
+            "description": "If true, adds results_fullcount (total rows without limit/offset) to the response header."
         },
         {
             "name": "id",
             "in": "query",
             "required": false,
             "type": "integer",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "A radio id. Either id or name must be provided."
+            "description": "A radio id."
         },
         {
             "name": "type",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": ["www", "pro"],
             "defaultValue": null,
-            "description": "Radio type: 'www' for public radios, 'pro' for commercial radios."
+            "description": "Radio type: www (public) or pro (commercial)."
         },
         {
             "name": "name",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "A radio name (unique identifier). Either name or id must be provided."
+            "description": "A radio name (unique identifier)."
         },
         {
             "name": "imagesize",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": ["150", "30"],
             "defaultValue": null,
             "description": "The radio image size in pixels."
@@ -82,17 +90,79 @@
             "name": "track_imagesize",
             "in": "query",
             "required": false,
-            "type": "string",
+            "type": "integer",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "The cover size in pixels for tracks."
+            "description": "The track cover size in pixels."
         }
     ],
     "requestBody": [],
-    "responseFields": [],
+    "responseFields": [
+        {
+            "name": "headers",
+            "type": "object",
+            "nullable": false,
+            "description": "Metadata about the request result (status, code, etc.)."
+        },
+        {
+            "name": "results",
+            "type": "array",
+            "nullable": false,
+            "description": "Array containing radio streaming information."
+        },
+        {
+            "name": "results.id",
+            "type": "integer",
+            "nullable": false,
+            "description": "Radio identifier."
+        },
+        {
+            "name": "results.name",
+            "type": "string",
+            "nullable": false,
+            "description": "Radio name (slug)."
+        },
+        {
+            "name": "results.dispname",
+            "type": "string",
+            "nullable": false,
+            "description": "Display name of the radio."
+        },
+        {
+            "name": "results.type",
+            "type": "string",
+            "nullable": false,
+            "description": "Radio type (www or pro)."
+        },
+        {
+            "name": "results.image",
+            "type": "string",
+            "nullable": false,
+            "description": "URL of the radio image."
+        },
+        {
+            "name": "results.stream",
+            "type": "string",
+            "nullable": false,
+            "description": "Streaming URL for the radio."
+        },
+        {
+            "name": "results.playingnow",
+            "type": "object",
+            "nullable": true,
+            "description": "Information about the currently playing track."
+        },
+        {
+            "name": "results.callmeback",
+            "type": "object",
+            "nullable": true,
+            "description": "Timing info indicating when the current track will finish."
+        }
+    ],
     "notes": [
-        "The stream link returned is currently broken and may never be fixed.",
-        "Either 'id' or 'name' must be supplied; both together are not required.",
-        "Performance impact: avoid using 'fullcount' on heavy methods."
+        "The stream URL returned by this endpoint is currently broken and may never be fixed.",
+        "client_id is mandatory, and you must provide either id or name (one of them).",
+        "fullcount can impact performance and is not available on all heavy methods."
     ]
 }

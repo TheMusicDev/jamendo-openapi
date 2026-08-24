@@ -40,7 +40,7 @@ const coerceToType = (value: string, jsonSchemaType: string): Json => {
 };
 
 const buildParameterSchema = (param: JamendoEndpointParameter, idiom: NullableIdiom): Json => {
-    const { type, isArray } = jamendoTypeToJsonSchemaType(param.type);
+    const { type, isArray } = jamendoTypeToJsonSchemaType(param.type, param.itemType);
     const leaf = applyType(type, false, idiom);
     if (param.enumValues) leaf.enum = param.enumValues.map((v) => coerceToType(v, type));
     if (param.defaultValue !== null) leaf.default = coerceToType(param.defaultValue, type);

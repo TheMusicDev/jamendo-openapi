@@ -3,14 +3,15 @@
     "method": "GET",
     "path": "/artists",
     "authType": "apikey",
-    "summary": "Retrieve a list of artists",
-    "description": "Returns artists with optional filtering, pagination and sorting. Sub‑methods such as artists/tracks, artists/albums, etc. are available. The method requires a client_id and supports various query parameters to control the result set.",
+    "summary": "Retrieve a list of artists with optional filtering and sorting",
+    "description": "Returns a collection of artist entities. The endpoint supports many filter parameters (name, id, date range, etc.) and allows sorting, pagination, and optional full count. Note that the `limit` parameter is capped at 200 rows even when set to 'all', and `fullcount` can impact performance and is not available on heavy methods. The `order` parameter defaults to ascending unless the field is a popularity metric, which always forces descending.",
     "parameters": [
         {
             "name": "client_id",
             "in": "query",
             "required": true,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
             "description": "A Client Id provided by devportal.jamendo.com."
@@ -20,6 +21,7 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": ["xml", "json", "jsonpretty"],
             "defaultValue": null,
             "description": "The results formatting type."
@@ -29,15 +31,17 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "Wraps the JSON response in a callback function (JSONP). Only works with json format and GET requests."
+            "description": "Wrap the JSON response in a callback function (JSONP). Only works with `format=json` and GET requests."
         },
         {
             "name": "offset",
             "in": "query",
             "required": false,
             "type": "integer",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
             "description": "The position to start returning results from."
@@ -47,60 +51,67 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
-            "defaultValue": null,
-            "description": "Maximum number of results to return. Default 10, max 200. Using 'all' still caps at 200."
+            "defaultValue": "10",
+            "description": "Maximum number of results to return. Default 10, maximum 200. The keyword 'all' is still limited to 200 rows."
         },
         {
             "name": "order",
             "in": "query",
             "required": false,
-            "type": "string",
+            "type": "array",
+            "itemType": "string",
             "enumValues": ["name", "id", "joindate", "popularity_total", "popularity_month", "popularity_week"],
             "defaultValue": null,
-            "description": "Sort results by the specified field(s). Append _asc or _desc to set direction. Ascending is default, except popularity fields which default to descending."
+            "description": "Sort results by one or more fields. Append `_asc` or `_desc` to specify direction; default is ascending except for popularity fields which enforce descending."
         },
         {
             "name": "fullcount",
             "in": "query",
             "required": false,
             "type": "boolean",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "If true, response header includes 'results_fullcount' – the total number of rows without limit/offset. Use sparingly for performance."
+            "description": "If true, the response header includes `results_fullcount` (total rows without pagination). May affect performance."
         },
         {
             "name": "id",
             "in": "query",
             "required": false,
-            "type": "integer",
+            "type": "array",
+            "itemType": "integer",
             "enumValues": null,
             "defaultValue": null,
-            "description": "One or more artist IDs (comma‑separated)."
+            "description": "One or more artist IDs to filter by."
         },
         {
             "name": "name",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "Exact artist name."
+            "description": "Exact artist name to filter."
         },
         {
             "name": "namesearch",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "Search for artists whose name contains the given substring."
+            "description": "Search for artists whose name contains the given query."
         },
         {
             "name": "hasimage",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": ["true", "1"],
             "defaultValue": null,
             "description": "Return only artists that have an image."
@@ -110,17 +121,73 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "Filter on artist joining date. Format: 'yyyy-mm-dd_yyyy-mm-dd' (from_to)."
+            "description": "Filter by artist join date range. Format: `yyyy-mm-dd_yyyy-mm-dd` (both from and to are mandatory)."
         }
     ],
     "requestBody": [],
-    "responseFields": [],
+    "responseFields": [
+        {
+            "name": "headers",
+            "type": "object",
+            "nullable": false,
+            "description": "Metadata about the request, including status, code, warnings, and result counts."
+        },
+        {
+            "name": "results",
+            "type": "array",
+            "nullable": false,
+            "description": "Array of artist objects matching the query."
+        },
+        {
+            "name": "id",
+            "type": "string",
+            "nullable": false,
+            "description": "Unique identifier of the artist."
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "nullable": false,
+            "description": "Artist name."
+        },
+        {
+            "name": "website",
+            "type": "string",
+            "nullable": true,
+            "description": "Artist's website or social media URL."
+        },
+        {
+            "name": "joindate",
+            "type": "string",
+            "nullable": true,
+            "description": "Date the artist joined Jamendo (YYYY-MM-DD)."
+        },
+        {
+            "name": "image",
+            "type": "string",
+            "nullable": true,
+            "description": "URL to the artist's image (default width 300)."
+        },
+        {
+            "name": "shorturl",
+            "type": "string",
+            "nullable": true,
+            "description": "Short Jamendo URL for the artist."
+        },
+        {
+            "name": "shareurl",
+            "type": "string",
+            "nullable": true,
+            "description": "Full shareable Jamendo URL for the artist."
+        }
+    ],
     "notes": [
-        "Do not include the version prefix in the path; use \"/artists\".",
-        "The 'limit' parameter cannot exceed 200 even when set to 'all'.",
-        "Popularity‑based order fields always use descending order, ignoring an explicit _asc suffix.",
-        "Enabling 'fullcount' may impact performance on heavy queries."
+        "`order` suffixes (`_asc`, `_desc`) override the default direction; popularity fields ignore `_asc` and always sort descending.",
+        "`limit` set to 'all' still respects the hard maximum of 200 rows.",
+        "Using `fullcount=true` may degrade performance on large result sets.",
+        "`datebetween` requires both dates separated by an underscore, e.g., `2020-01-01_2020-12-31`."
     ]
 }

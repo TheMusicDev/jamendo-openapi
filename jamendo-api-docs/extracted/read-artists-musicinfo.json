@@ -1,16 +1,17 @@
 {
-    "operationId": "getArtistMusicInfo",
+    "operationId": "getArtistsMusicInfo",
     "method": "GET",
     "path": "/artists/musicinfo",
     "authType": "apikey",
-    "summary": "Retrieve artist tags and descriptions",
-    "description": "Returns the list of tags for each artist together with its description (HTML) if available. In addition to all the common query parameters of the parent 'artists' method, this endpoint supports filtering by a single tag using the 'tag' parameter. The response can be formatted as XML, JSON, or pretty‑printed JSON.",
+    "summary": "Returns tags list and description for each artist.",
+    "description": "Returns the tags list of each artist together with its HTML description (if present). All common parameters of the parent 'artists' endpoint are supported, plus a 'tag' filter (single tag only) and additional pagination and ordering options. Use the 'format' parameter to choose the response format. The 'fullcount' flag can be enabled for pagination but may impact performance.",
     "parameters": [
         {
             "name": "client_id",
             "in": "query",
             "required": true,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
             "description": "A Client Id provided by devportal.jamendo.com."
@@ -20,6 +21,7 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": ["xml", "json", "jsonpretty"],
             "defaultValue": null,
             "description": "The results formatting type."
@@ -29,15 +31,17 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "Wrap the JSON response in a callback function (JSONP). Only works with json format and GET requests."
+            "description": "Wraps the JSON response in a callback function (JSONP). Only works with JSON format on GET requests."
         },
         {
             "name": "offset",
             "in": "query",
             "required": false,
             "type": "integer",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
             "description": "The position to start returning results from."
@@ -47,60 +51,67 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
-            "defaultValue": null,
-            "description": "Maximum number of results to return. Default 10, max 200. The keyword 'all' is capped at 200."
+            "defaultValue": "10",
+            "description": "Maximum number of results to return. Default 10, max 200. The keyword 'all' is treated as 200."
         },
         {
             "name": "order",
             "in": "query",
             "required": false,
-            "type": "string",
+            "type": "array",
+            "itemType": "string",
             "enumValues": ["name", "id", "joindate", "popularity_total", "popularity_month", "popularity_week"],
             "defaultValue": null,
-            "description": "Sort results by the specified field(s). Append _asc or _desc to set direction; ascending is default except for popularity orders which force descending."
+            "description": "Sort results by the queried field(s). Append _asc or _desc to specify direction; _asc is default except for popularity fields which default to _desc."
         },
         {
             "name": "fullcount",
             "in": "query",
             "required": false,
             "type": "boolean",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "If true, the response header includes the total number of rows that would be returned without limit/offset. Use sparingly as it impacts performance."
+            "description": "If true, the response header includes 'results_fullcount' – the total number of rows without pagination. Use sparingly as it may affect performance."
         },
         {
             "name": "id",
             "in": "query",
             "required": false,
-            "type": "integer",
+            "type": "array",
+            "itemType": "integer",
             "enumValues": null,
             "defaultValue": null,
-            "description": "One or more artist IDs (can be repeated)."
+            "description": "One or more artist IDs."
         },
         {
             "name": "name",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "An artist name."
+            "description": "Exact artist name to match."
         },
         {
             "name": "namesearch",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "Search an artist by name using a wildcard pattern."
+            "description": "Search an artist by name using wildcard matching."
         },
         {
             "name": "hasimage",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": ["true", "1"],
             "defaultValue": null,
             "description": "Return only artists that have an image."
@@ -110,25 +121,41 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "Filter on the artist joining date using a closed interval formatted as yyyy-mm-dd_yyyy-mm-dd."
+            "description": "Filter on artist joining date. Format: yyyy-mm-dd_yyyy-mm-dd (from_to). Both dates mandatory."
         },
         {
             "name": "tag",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "Filter artists by a single tag. Results are returned in relevance order unless another order is specified."
+            "description": "Filter artists by a single tag. Results are returned by relevance unless a different order is specified."
         }
     ],
     "requestBody": [],
-    "responseFields": [],
+    "responseFields": [
+        {
+            "name": "headers",
+            "type": "object",
+            "nullable": false,
+            "description": "Metadata about the request, including status, code, error_message, warnings, and results_count."
+        },
+        {
+            "name": "results",
+            "type": "array",
+            "nullable": false,
+            "description": "Array of artist objects containing id, name, website, joindate, image, shorturl, shareurl, etc."
+        }
+    ],
     "notes": [
-        "Only one tag can be used for filtering; multiple tags are not supported.",
-        "Popularity based order fields always sort descending, even if _asc is requested.",
-        "Setting fullcount=true can significantly affect response time on large result sets."
+        "The 'tag' parameter currently accepts only a single tag.",
+        "Ordering fields can be suffixed with _asc or _desc; popularity_* fields default to descending order.",
+        "Enabling 'fullcount' may increase response time on heavy queries.",
+        "The 'callback' parameter works only with JSON formats and GET requests; it is ignored otherwise."
     ]
 }

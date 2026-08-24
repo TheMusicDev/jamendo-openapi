@@ -5,6 +5,8 @@ export const JamendoEndpointParameterSchema = z.object({
     in: z.enum(['query', 'path']),
     required: z.boolean(),
     type: z.string(),
+    /** Element type when `type` is "array" (e.g. "integer" for "one or more track IDs"). Null when type isn't an array. */
+    itemType: z.string().nullable(),
     enumValues: z.array(z.string()).nullable(),
     defaultValue: z.string().nullable(),
     description: z.string(),

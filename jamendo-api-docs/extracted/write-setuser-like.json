@@ -1,61 +1,81 @@
 {
-    "operationId": "setuserLike",
+    "operationId": "setUserLike",
     "method": "POST",
     "path": "/setuser/like",
     "authType": "oauth2",
-    "summary": "Add a like from the authenticated user to a track",
-    "description": "Lets the authenticated user (specified by access_token) like the given track_id. If the track does not exist no error is raised, but the like will not appear in any read request. Requires a valid client_id and an OAuth2 access token with the 'music' scope.",
-    "parameters": [
+    "summary": "Allows a user to like a specific track",
+    "description": "Marks the track identified by `track_id` as liked by the user associated with the provided `access_token`. If the track does not exist, no error is raised and the track will not appear in any read request. Requires a valid `client_id` (API key) and an `access_token` with the `music` scope.",
+    "parameters": [],
+    "requestBody": [
         {
             "name": "client_id",
             "in": "query",
             "required": true,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
             "description": "A Client Id provided by devportal.jamendo.com"
-        },
-        {
-            "name": "access_token",
-            "in": "query",
-            "required": true,
-            "type": "string",
-            "enumValues": null,
-            "defaultValue": null,
-            "description": "A valid OAuth2 access token with 'music' scope for the user"
-        },
-        {
-            "name": "track_id",
-            "in": "query",
-            "required": true,
-            "type": "integer",
-            "enumValues": null,
-            "defaultValue": null,
-            "description": "Identifier of the track to like"
         },
         {
             "name": "format",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": ["xml", "json", "jsonpretty"],
             "defaultValue": null,
-            "description": "Result formatting type"
+            "description": "The results formatting type"
         },
         {
             "name": "fullcount",
             "in": "query",
             "required": false,
             "type": "boolean",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "If true, includes the total count of possible results in the response header (performance impact)"
+            "description": "If true, adds the total number of rows that would be returned without limit/offset to the response header"
+        },
+        {
+            "name": "access_token",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "itemType": null,
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "A valid OAuth2 access token with the 'music' scope for the Jamendo user"
+        },
+        {
+            "name": "track_id",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "itemType": null,
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "Identifier of the track to be liked"
         }
     ],
-    "requestBody": [],
-    "responseFields": [],
+    "responseFields": [
+        {
+            "name": "headers",
+            "type": "object",
+            "nullable": false,
+            "description": "Metadata about the request outcome, including status and result counts"
+        },
+        {
+            "name": "results",
+            "type": "array",
+            "nullable": false,
+            "description": "Array of results; empty for this operation"
+        }
+    ],
     "notes": [
-        "No error is returned if the specified track does not exist; the like will simply not be recorded.",
-        "Requires the OAuth2 'music' scope; a simple API key alone is insufficient."
+        "Both `client_id` and `access_token` are required; `client_id` acts as the API key.",
+        "`format` defaults to JSON if omitted.",
+        "`fullcount` may be unavailable on heavy methods due to performance considerations.",
+        "No error is raised if `track_id` refers to a non‑existent track; the operation is silently ignored."
     ]
 }

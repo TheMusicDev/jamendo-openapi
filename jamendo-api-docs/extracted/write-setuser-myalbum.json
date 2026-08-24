@@ -3,14 +3,15 @@
     "method": "POST",
     "path": "/setuser/myalbum",
     "authType": "oauth2",
-    "summary": "Add an album to a user's myalbums list",
-    "description": "Adds the specified album to the authenticated user's list of favorite albums (myalbums). Requires both a client_id (API key) and a valid access_token with the 'music' scope. Optional parameters control response format and pagination metadata.",
+    "summary": "Add an album to the user's myalbums list",
+    "description": "Adds the specified album to the authenticated user's list of favorite albums (myalbums). Requires a valid client_id and an OAuth2 access token with the 'music' scope. Returns an empty results array and header information indicating success.",
     "parameters": [
         {
             "name": "client_id",
             "in": "query",
             "required": true,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
             "description": "A Client Id provided by devportal.jamendo.com"
@@ -20,8 +21,9 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": ["xml", "json", "jsonpretty"],
-            "defaultValue": null,
+            "defaultValue": "json",
             "description": "The results formatting type"
         },
         {
@@ -29,34 +31,51 @@
             "in": "query",
             "required": false,
             "type": "boolean",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "If true, includes the total number of rows in the header (results_fullcount). Use sparingly for performance reasons."
+            "description": "If true, the response header includes the 'results_fullcount' value (performance impact)."
         },
         {
             "name": "access_token",
             "in": "query",
             "required": true,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "A valid access token (with 'music' scope) for the Jamendo user to update"
+            "description": "A valid access token (with 'music' scope) for the Jamendo user to update."
         },
         {
             "name": "album_id",
             "in": "query",
             "required": true,
             "type": "integer",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "The ID of the album to add to the user's myalbums list"
+            "description": "The id of the album that should be added to the user's albums list"
         }
     ],
     "requestBody": [],
-    "responseFields": [],
+    "responseFields": [
+        {
+            "name": "headers",
+            "type": "object",
+            "nullable": false,
+            "description": "Metadata about the request outcome, including status and result counts."
+        },
+        {
+            "name": "results",
+            "type": "array",
+            "nullable": false,
+            "description": "List of results; empty for this method."
+        }
+    ],
     "notes": [
-        "Both client_id and access_token must be supplied; client_id acts as the API key.",
-        "The 'format' parameter defaults to json if omitted.",
-        "The endpoint does not include the version prefix in the path as per specification."
+        "The response always contains an empty \"results\" array.",
+        "Both client_id and access_token are required; client_id acts as the API key.",
+        "`format` accepts only the values xml, json, or jsonpretty.",
+        "`fullcount` can affect performance and should be used only when needed."
     ]
 }
