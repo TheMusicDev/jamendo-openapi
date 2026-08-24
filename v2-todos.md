@@ -73,17 +73,19 @@ Found and fixed during development (code-review-caught, not self-discovered):
 - Enum/default values were always strings in extraction but got assigned into integer/boolean-typed schemas
   verbatim — invalid JSON Schema (`no-enum-type-mismatch`). Fixed with type coercion.
 
+## Array-item-type fix (was Chunk C)
+
+Array-typed params (e.g. "one or more track IDs") were always serializing with `string` items in both generated
+specs. Added an `itemType` field to `JamendoEndpointParameter`, updated the extraction prompt to populate it, and
+updated `serialize-openapi.ts` to use it instead of defaulting to `string`. Re-ran `extract-docs` (31/31 succeeded)
++ `build-openapi` against the new schema — both specs still validate clean, 30/30 endpoints present. `id` /
+`track_id` / `album_id` / `artist_id` now correctly serialize with `items: { type: integer }`.
+
 ---
 
 # 🚧 PENDING
 
-**First, not parallelizable — do this before starting any chunk below:**
-
-## 0. Merge PR #3
-`feat/build-openapi` → `main`. Every chunk below assumes `build-openapi` exists on `main`; starting other work
-against the unmerged branch risks conflicts.
-
----
+PR #3 (`feat/build-openapi`) is merged into `main` — the old step-0 blocker is cleared.
 
 **Everything below is independent — different files/repos, safe to hand out in parallel.**
 
@@ -110,21 +112,18 @@ matches the actual v2 pipeline (`jamendo-api-docs/`, `openapi-docs/`, the three 
       hardcoded to `jamendo-openapi`, which doesn't match the `bun cli` entrypoint people actually type, so
       citty's usage output is confusing.
 
-## C. Array-item-type extraction/spec limitation
-*Touches: `src/schemas/jamendo-endpoint.schema.ts`, `src/lib/jamendo-extraction-prompts.ts`, `src/lib/serialize-openapi.ts`. Requires re-running `extract-docs` + `build-openapi` after the schema change.*
-
-Array-typed params always serialize with `string` items in both generated specs, since `JamendoEndpointParameter`
-has no separate item-type field — e.g. "one or more track IDs" (`id` param on several endpoints) gets
-`items: { type: string }` instead of `items: { type: integer }`.
-
-- [ ] Add an `itemType` field to the parameter extraction schema.
-- [ ] Update the extraction prompt to populate it.
-- [ ] Update `serialize-openapi.ts` to use it instead of defaulting array items to `string`.
-- [ ] Re-run `extract-docs` + `build-openapi`, verify the regenerated specs still validate clean.
-
-## D. Repo 2 — jamendo-ts-client
+## C. Repo 2 — jamendo-ts-client
 *Fully separate repo. No file overlap with this repo at all.*
 
 The typed TS client meant to consume this spec. Scoped as a fully separate repo from the start (see the original
 `project-overview.md`); nothing has been built for it yet. Can start any time once repo 1's spec is stable enough
 to point at (a tagged release, or just `main` if moving fast).
+
+## D. Minor — extraction field-type inconsistency
+*Touches: nothing yet — needs investigation first, may just be a prompt tweak in `jamendo-extraction-prompts.ts`.*
+
+Noticed while verifying the array-item-type fix: the same field name gets a different `type`/`itemType` on
+different pages — e.g. `album_id` is `itemType: "string"` on `read-artists-tracks.json` but `itemType: "integer"`
+on `read-tracks.json`. Same root cause as the earlier `format`/`format_2`/`format_3` dedup-visible drift — the LLM
+re-derives each page's fields independently with no cross-page consistency check. Low priority, doesn't break
+validity, but worth a look if extraction accuracy becomes a focus again.
