@@ -1,16 +1,17 @@
 {
-    "operationId": "getAlbumsTracks",
+    "operationId": "getAlbumTracks",
     "method": "GET",
     "path": "/albums/tracks",
     "authType": "apikey",
-    "summary": "Retrieve albums with their belonging tracks.",
-    "description": "Select and filter album entities along with their tracks. Includes the new 'zip_allowed' boolean indicating download permission and the 'zip' field which may be empty when downloads are not allowed.",
+    "summary": "Select and filter album entities and their belonging tracks",
+    "description": "This method selects and filters album entities together with their tracks. Since February 2021 a new boolean field `zip_allowed` is returned indicating whether the album can be offered for download. As of April 2022 the `zip` field will be an empty string when `zip_allowed` is false. All other fields are the same as in the parent `albums` method plus track‑specific fields.",
     "parameters": [
         {
             "name": "client_id",
             "in": "query",
             "required": true,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
             "description": "A Client Id provided by devportal.jamendo.com."
@@ -20,6 +21,7 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": ["xml", "json", "jsonpretty"],
             "defaultValue": null,
             "description": "The results formatting type."
@@ -29,15 +31,17 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "JSONP callback function name (only for json format GET requests)."
+            "description": "Wrap the JSON response in a callback function (JSONP). Only works with format=json and GET requests."
         },
         {
             "name": "offset",
             "in": "query",
             "required": false,
             "type": "integer",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
             "description": "The position to start returning results from."
@@ -47,15 +51,17 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
-            "defaultValue": null,
-            "description": "Maximum number of results to return (default 10, max 200, 'all' limited to 200)."
+            "defaultValue": "10",
+            "description": "Maximum number of results to return. Default 10, max 200. The keyword 'all' still caps at 200."
         },
         {
             "name": "order",
             "in": "query",
             "required": false,
-            "type": "string",
+            "type": "array",
+            "itemType": "string",
             "enumValues": [
                 "name",
                 "id",
@@ -70,22 +76,24 @@
                 "track_position"
             ],
             "defaultValue": null,
-            "description": "Sort results by field(s). Append _asc or _desc to specify direction; defaults to asc, rating fields default to desc."
+            "description": "Sort results by the queried field(s). Append _asc or _desc to specify direction. Ascending is default, except rating fields which default to descending."
         },
         {
             "name": "fullcount",
             "in": "query",
             "required": false,
             "type": "boolean",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "If true, include total result count in header (performance impact)."
+            "description": "If true, include `results_fullcount` (total rows without limit/offset) in the response header. Use with caution as it impacts performance."
         },
         {
             "name": "id",
             "in": "query",
             "required": false,
-            "type": "integer",
+            "type": "array",
+            "itemType": "integer",
             "enumValues": null,
             "defaultValue": null,
             "description": "One or more album IDs."
@@ -95,6 +103,7 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
             "description": "An album name."
@@ -104,15 +113,17 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "Search an album by name using wildcard (e.g., *searchquery*)."
+            "description": "Search an album by name (wildcard *searchquery*)."
         },
         {
             "name": "artist_id",
             "in": "query",
             "required": false,
-            "type": "string",
+            "type": "array",
+            "itemType": "string",
             "enumValues": null,
             "defaultValue": null,
             "description": "One or more artist IDs."
@@ -122,6 +133,7 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
             "description": "An artist name."
@@ -131,15 +143,17 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "Released between dates (format yyyy-mm-dd_yyyy-mm-dd)."
+            "description": "Released between dates. Format: yyyy-mm-dd_yyyy-mm-dd (from_to)."
         },
         {
             "name": "imagesize",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": [
                 "25",
                 "35",
@@ -160,31 +174,34 @@
                 "600"
             ],
             "defaultValue": null,
-            "description": "Cover size in pixels."
+            "description": "Cover image size in pixels."
         },
         {
             "name": "audioformat",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": ["mp31", "mp32", "ogg", "flac"],
-            "defaultValue": null,
-            "description": "Audio format for the 'audio' field; defaults to mp31."
+            "defaultValue": "mp31",
+            "description": "Audio format for the `audio` field. Defaults to mp31."
         },
         {
             "name": "type",
             "in": "query",
             "required": false,
-            "type": "string",
+            "type": "array",
+            "itemType": "string",
             "enumValues": ["single", "album"],
             "defaultValue": null,
-            "description": "Filter by release type; defaults to both albums and singles."
+            "description": "Select releases of a certain type. By default both albums and singles are returned."
         },
         {
             "name": "track_id",
             "in": "query",
             "required": false,
-            "type": "integer",
+            "type": "array",
+            "itemType": "integer",
             "enumValues": null,
             "defaultValue": null,
             "description": "One or more track IDs."
@@ -194,6 +211,7 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
             "description": "A track name."
@@ -203,15 +221,73 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": ["mp31", "mp32", "ogg", "flac"],
             "defaultValue": null,
-            "description": "Audio download format for 'audiodownload'; defaults to audioformat or mp32."
+            "description": "Audio download format for the `audiodownload` field. Falls back to `audioformat` or mp32."
         }
     ],
     "requestBody": [],
-    "responseFields": [],
+    "responseFields": [
+        {
+            "name": "id",
+            "type": "string",
+            "nullable": false,
+            "description": "Album identifier."
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "nullable": false,
+            "description": "Album name."
+        },
+        {
+            "name": "releasedate",
+            "type": "string",
+            "nullable": false,
+            "description": "Release date in yyyy-mm-dd format."
+        },
+        {
+            "name": "artist_id",
+            "type": "string",
+            "nullable": false,
+            "description": "Artist identifier."
+        },
+        {
+            "name": "artist_name",
+            "type": "string",
+            "nullable": false,
+            "description": "Artist name."
+        },
+        {
+            "name": "track_id",
+            "type": "string",
+            "nullable": false,
+            "description": "Track identifier."
+        },
+        {
+            "name": "image",
+            "type": "string",
+            "nullable": false,
+            "description": "URL of the album cover image."
+        },
+        {
+            "name": "zip_allowed",
+            "type": "boolean",
+            "nullable": false,
+            "description": "Indicates whether the album zip download is permitted."
+        },
+        {
+            "name": "zip",
+            "type": "string",
+            "nullable": true,
+            "description": "URL to the zip file containing the album. Empty string when zip_allowed is false."
+        }
+    ],
     "notes": [
-        "Since February 2021 the response includes a boolean field 'zip_allowed' indicating if download is permitted.",
-        "From April 2022 the 'zip' field will be an empty string when 'zip_allowed' is false."
+        "The `zip_allowed` field is new (Feb 2021). If false, the `zip` field will be empty (Apr 2022).",
+        "`limit` caps at 200 even when the keyword 'all' is used.",
+        "`order` defaults to ascending, except rating fields which always sort descending.",
+        "`fullcount` can impact performance; enable only when needed."
     ]
 }

@@ -13,10 +13,13 @@ export const ENDPOINT_SYSTEM_PROMPT = `${JSON_ONLY_INSTRUCTION}
   "description": string,               // longer, include any caveats (e.g. "empty for singles")
   "parameters": [
     { "name": string, "in": "query" | "path", "required": boolean, "type": string,
+      "itemType": string | null,       // ONLY set when type is "array" -- the element type, e.g. "integer" for
+                                        // "one or more track IDs" or "string" for a comma-separated list of tags. null otherwise.
       "enumValues": string[] | null, "defaultValue": string | null, "description": string }
   ],
   "requestBody": [
     { "name": string, "in": "query" | "path", "required": boolean, "type": string,
+      "itemType": string | null,       // same rule as above
       "enumValues": string[] | null, "defaultValue": string | null, "description": string }
   ],                                   // empty array if this is a GET / has no body
   "responseFields": [

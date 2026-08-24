@@ -3,14 +3,15 @@
     "method": "GET",
     "path": "/albums",
     "authType": "apikey",
-    "summary": "Retrieve a filtered list of album entities.",
-    "description": "Select and filter album entities, returning the main fields concerning albums. Includes the new 'zip_allowed' boolean indicating whether a download zip is permitted and notes that the 'zip' field will be empty when 'zip_allowed' is false. Supports pagination, ordering, and various search filters.",
+    "summary": "Retrieve a list of albums",
+    "description": "Selects and filters album entities, returning the main fields for each album. Includes the new 'zip_allowed' boolean indicating whether the album zip download is permitted; if false, the 'zip' field will be an empty string. Supports various query parameters for pagination, ordering, and filtering by album or artist attributes.",
     "parameters": [
         {
             "name": "client_id",
             "in": "query",
             "required": true,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
             "description": "A Client Id provided by devportal.jamendo.com."
@@ -20,6 +21,7 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": ["xml", "json", "jsonpretty"],
             "defaultValue": null,
             "description": "The results formatting type."
@@ -29,15 +31,17 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "Wrap JSON response in a callback function (JSONP). Only works with json format and GET requests."
+            "description": "Wraps the JSON response in a callback function (JSONP). Only works with format=json and GET requests."
         },
         {
             "name": "offset",
             "in": "query",
             "required": false,
             "type": "integer",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
             "description": "The position to start returning results from."
@@ -47,15 +51,17 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
-            "defaultValue": "10",
-            "description": "Maximum number of results to return. Default is 10, max 200. Using 'all' still caps at 200."
+            "defaultValue": null,
+            "description": "Maximum number of results to return. Default is 10, max is 200. 'all' returns up to 200 rows."
         },
         {
             "name": "order",
             "in": "query",
             "required": false,
-            "type": "string",
+            "type": "array",
+            "itemType": "string",
             "enumValues": [
                 "name",
                 "id",
@@ -67,76 +73,84 @@
                 "popularity_week"
             ],
             "defaultValue": null,
-            "description": "Sort results by the queried field(s). Append _asc or _desc to specify order (ascending is default, rating fields default to descending)."
+            "description": "Sort results by the queried field(s). Append _asc or _desc to specify direction (default asc). Popularity fields default to desc."
         },
         {
             "name": "fullcount",
             "in": "query",
             "required": false,
             "type": "boolean",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "If true, the response header includes 'results_fullcount' (total rows without limit/offset). Use sparingly as it impacts performance."
+            "description": "If true, the response header includes 'results_fullcount' – the total number of rows without limit/offset. Use sparingly for performance."
         },
         {
             "name": "id",
             "in": "query",
             "required": false,
-            "type": "string",
+            "type": "array",
+            "itemType": "integer",
             "enumValues": null,
             "defaultValue": null,
-            "description": "One or more album IDs (comma‑separated)."
+            "description": "One or more album IDs."
         },
         {
             "name": "name",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "Filter by exact album name."
+            "description": "An album name."
         },
         {
             "name": "namesearch",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "Search album names using wildcard (*searchquery*)."
+            "description": "Search an album by name (wildcard match)."
         },
         {
             "name": "artist_id",
             "in": "query",
             "required": false,
-            "type": "string",
+            "type": "array",
+            "itemType": "string",
             "enumValues": null,
             "defaultValue": null,
-            "description": "One or more artist IDs (comma‑separated)."
+            "description": "One or more artist IDs."
         },
         {
             "name": "artist_name",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "Filter by artist name."
+            "description": "An artist name."
         },
         {
             "name": "datebetween",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "Filter albums released between two dates (format yyyy-mm-dd_yyyy-mm-dd)."
+            "description": "Released between dates, format 'yyyy-mm-dd_yyyy-mm-dd'."
         },
         {
             "name": "imagesize",
             "in": "query",
             "required": false,
-            "type": "integer",
+            "type": "string",
+            "itemType": null,
             "enumValues": [
                 "25",
                 "35",
@@ -157,32 +171,84 @@
                 "600"
             ],
             "defaultValue": null,
-            "description": "Desired cover image size in pixels."
+            "description": "Cover image size in pixels."
         },
         {
             "name": "audioformat",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": ["mp32"],
             "defaultValue": null,
-            "description": "Audio format for file URLs; only 'mp32' (mp3 192kbps) is supported."
+            "description": "Audio format for file URLs; currently only mp32 (mp3 192kbps)."
         },
         {
             "name": "type",
             "in": "query",
             "required": false,
-            "type": "string",
+            "type": "array",
+            "itemType": "string",
             "enumValues": ["single", "album"],
             "defaultValue": null,
-            "description": "Select releases of a certain type. Defaults to both albums and singles."
+            "description": "Select only releases of a certain type. Defaults to both 'album' and 'single'."
         }
     ],
     "requestBody": [],
-    "responseFields": [],
+    "responseFields": [
+        {
+            "name": "id",
+            "type": "string",
+            "nullable": false,
+            "description": "Album identifier."
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "nullable": false,
+            "description": "Album name."
+        },
+        {
+            "name": "releasedate",
+            "type": "string",
+            "nullable": false,
+            "description": "Release date (yyyy-mm-dd)."
+        },
+        {
+            "name": "artist_id",
+            "type": "string",
+            "nullable": false,
+            "description": "Identifier of the artist."
+        },
+        {
+            "name": "artist_name",
+            "type": "string",
+            "nullable": false,
+            "description": "Name of the artist."
+        },
+        {
+            "name": "image",
+            "type": "string",
+            "nullable": false,
+            "description": "URL of the album cover image."
+        },
+        {
+            "name": "zip",
+            "type": "string",
+            "nullable": false,
+            "description": "URL to download the album's tracks as a high‑quality MP3 zip. Empty string if 'zip_allowed' is false."
+        },
+        {
+            "name": "zip_allowed",
+            "type": "boolean",
+            "nullable": false,
+            "description": "Indicates whether the album zip download is permitted by the artist."
+        }
+    ],
     "notes": [
-        "Since February 2021 the response includes a boolean field 'zip_allowed' indicating if a download zip can be offered.",
-        "From April 2022, if 'zip_allowed' is false the 'zip' field will be an empty string.",
-        "The endpoint does not include the version prefix in the path; use '/albums' as shown."
+        "If 'zip_allowed' is false, the 'zip' field will be an empty string (as of April 2022).",
+        "The 'fullcount' parameter adds a heavyweight header; use only when necessary.",
+        "The 'limit' parameter caps at 200 rows even when set to 'all'.",
+        "Ordering by popularity fields always forces descending order regardless of _asc suffix."
     ]
 }

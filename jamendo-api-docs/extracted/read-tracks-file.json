@@ -3,14 +3,15 @@
     "method": "GET",
     "path": "/tracks/file",
     "authType": "apikey",
-    "summary": "Redirect to the requested audio file for a track",
-    "description": "Returns an HTTP redirect to the audio file URL for a given track. The endpoint accepts a limited set of query parameters and does not inherit the usual parent parameters. If the track's 'audiodownload_allowed' flag is false, the request will result in a 404 error. The default action is 'download' and the default audio format is 'mp31'.",
+    "summary": "Redirect to the requested track audio file",
+    "description": "Returns an HTTP 302 redirect to the audio file for a given track ID. If the track's audiodownload_allowed (or track_audiodownload_allowed) flag is false, a 404 error is returned. Malformed requests yield a 500 error. This endpoint does not inherit the common parameter declarations of other methods.",
     "parameters": [
         {
             "name": "client_id",
             "in": "query",
             "required": true,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
             "description": "A Client Id provided by devportal.jamendo.com."
@@ -20,44 +21,47 @@
             "in": "query",
             "required": true,
             "type": "integer",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "The unique identifier of the track to retrieve. Only one track id is accepted."
+            "description": "The unique identifier of the track to download/stream. Exactly one ID is accepted."
         },
         {
             "name": "fullcount",
             "in": "query",
             "required": false,
             "type": "boolean",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "If true, the response header includes 'results_fullcount' with the total number of rows that would be returned without limit/offset."
+            "description": "If true, the response header includes 'results_fullcount' with the total number of rows without pagination. Use sparingly as it impacts performance."
         },
         {
             "name": "audioformat",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": ["mp31", "mp32", "ogg", "flac"],
             "defaultValue": "mp31",
-            "description": "Desired audio format for the returned file. Defaults to mp31 if not specified."
+            "description": "Desired audio format for the returned file. Defaults to mp31 (96 kbps) if omitted."
         },
         {
             "name": "action",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": ["download", "stream"],
             "defaultValue": "download",
-            "description": "Specifies whether the request is for streaming or downloading; helps server optimize handling."
+            "description": "Indicates whether the request is for downloading or streaming, helping the server optimise handling."
         }
     ],
     "requestBody": [],
     "responseFields": [],
     "notes": [
-        "The endpoint performs an HTTP redirect; no JSON body is returned.",
-        "A 404 error is returned when 'audiodownload_allowed' (or 'track_audiodownload_allowed') is false for the requested track.",
-        "Only the parameters listed above are accepted; standard parent parameters are not inherited.",
-        "The 'client_id' parameter is mandatory for authentication; ensure it is valid."
+        "If 'audiodownload_allowed'/'track_audiodownload_allowed' is false for the requested track, the endpoint returns HTTP 404.",
+        "The endpoint performs an HTTP redirect; the final audio URL is provided in the 'Location' header.",
+        "Only a single track ID is allowed; providing multiple IDs results in an error."
     ]
 }

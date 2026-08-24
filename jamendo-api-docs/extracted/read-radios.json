@@ -3,14 +3,15 @@
     "method": "GET",
     "path": "/radios",
     "authType": "apikey",
-    "summary": "Retrieve list of Jamendo radios",
-    "description": "Returns the list of existing Jamendo radios with their associated image and name. Each radio id or name can then be used to integrate the radio via the stream API. Note that commercial use requires a commercial license and upgrading the developer account to access 'pro' radios.",
+    "summary": "Get list of Jamendo radios",
+    "description": "Returns the list of existing Jamendo radios with their image, name and other metadata. Each radio can be streamed via the /radios/stream endpoint. Commercial \"pro\" radios require a commercial license and will only be returned if your account has that access.",
     "parameters": [
         {
             "name": "client_id",
             "in": "query",
             "required": true,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
             "description": "A Client Id provided by devportal.jamendo.com."
@@ -19,7 +20,8 @@
             "name": "format",
             "in": "query",
             "required": false,
-            "type": "enum",
+            "type": "string",
+            "itemType": null,
             "enumValues": ["xml", "json", "jsonpretty"],
             "defaultValue": null,
             "description": "The results formatting type."
@@ -29,6 +31,7 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
             "description": "Wraps the JSON response in a callback function (JSONP). Only works with json format and GET requests."
@@ -38,6 +41,7 @@
             "in": "query",
             "required": false,
             "type": "integer",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
             "description": "The position to start returning results from."
@@ -47,70 +51,151 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": "10",
-            "description": "Maximum number of results to return. Default is 10, max 200. Using 'all' still caps at 200."
+            "description": "Maximum number of results to return. Default 10, max 200. Using 'all' still caps at 200."
         },
         {
             "name": "order",
             "in": "query",
             "required": false,
-            "type": "enum[]",
+            "type": "array",
+            "itemType": "string",
             "enumValues": ["id", "name", "dispname"],
             "defaultValue": null,
-            "description": "Sort results by field(s). Append _asc or _desc to specify order; default is ascending."
+            "description": "Sort results by the given field(s). Append _asc or _desc to specify direction; default is ascending."
         },
         {
             "name": "fullcount",
             "in": "query",
             "required": false,
             "type": "boolean",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "If true, includes 'results_fullcount' with the total number of rows without pagination."
+            "description": "If true, adds 'results_fullcount' in the header indicating the total number of rows without limit/offset. Use sparingly for performance."
         },
         {
             "name": "id",
             "in": "query",
             "required": false,
             "type": "integer",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "A radio id to filter the list."
+            "description": "Filter by a specific radio id."
         },
         {
             "name": "type",
             "in": "query",
             "required": false,
-            "type": "enum",
+            "type": "string",
+            "itemType": null,
             "enumValues": ["www", "pro"],
-            "defaultValue": null,
-            "description": "Radio type: 'www' for public radios (default) or 'pro' for commercial radios."
+            "defaultValue": "www",
+            "description": "Filter by radio type. 'www' are public, 'pro' are commercial and require a license."
         },
         {
             "name": "name",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "A unique radio name to filter the list."
+            "description": "Filter by a unique radio name."
         },
         {
             "name": "imagesize",
             "in": "query",
             "required": false,
-            "type": "enum",
+            "type": "string",
+            "itemType": null,
             "enumValues": ["150", "30"],
             "defaultValue": null,
-            "description": "Radio image size in pixels. If not specified, a default size is returned."
+            "description": "Desired radio image size in pixels."
         }
     ],
     "requestBody": [],
-    "responseFields": [],
+    "responseFields": [
+        {
+            "name": "headers",
+            "type": "object",
+            "nullable": false,
+            "description": "Metadata about the response."
+        },
+        {
+            "name": "headers.status",
+            "type": "string",
+            "nullable": false,
+            "description": "Status of the request, e.g., 'success'."
+        },
+        {
+            "name": "headers.code",
+            "type": "integer",
+            "nullable": false,
+            "description": "Numeric status code."
+        },
+        {
+            "name": "headers.error_message",
+            "type": "string",
+            "nullable": true,
+            "description": "Error message if any."
+        },
+        {
+            "name": "headers.warnings",
+            "type": "string",
+            "nullable": true,
+            "description": "Any warnings returned by the API."
+        },
+        {
+            "name": "headers.results_count",
+            "type": "integer",
+            "nullable": false,
+            "description": "Number of radio objects returned in this page."
+        },
+        {
+            "name": "results",
+            "type": "array",
+            "nullable": false,
+            "description": "Array of radio objects."
+        },
+        {
+            "name": "results.id",
+            "type": "integer",
+            "nullable": false,
+            "description": "Radio identifier."
+        },
+        {
+            "name": "results.name",
+            "type": "string",
+            "nullable": false,
+            "description": "Unique radio name."
+        },
+        {
+            "name": "results.dispname",
+            "type": "string",
+            "nullable": false,
+            "description": "Display name of the radio."
+        },
+        {
+            "name": "results.type",
+            "type": "string",
+            "nullable": false,
+            "description": "Radio type ('www' or 'pro')."
+        },
+        {
+            "name": "results.image",
+            "type": "string",
+            "nullable": true,
+            "description": "URL of the radio image."
+        }
+    ],
     "notes": [
-        "Commercial usage requires a paid license; 'pro' radios are only available after upgrading the account.",
-        "The 'callback' parameter works only with JSON format and GET requests; otherwise it is ignored with a warning.",
-        "Setting fullcount=true may impact performance and is not available on heavy methods."
+        "The endpoint path does not include the version prefix; version is implicit in the base URL.",
+        "\"pro\" radios are only returned for accounts with a commercial license.",
+        "The 'order' parameter accepts multiple values separated by commas, e.g., order=id_desc,name_asc.",
+        "The 'limit' parameter accepts the literal string 'all', but the API still caps the result set at 200 rows."
     ]
 }

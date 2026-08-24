@@ -7,6 +7,7 @@ const param = (overrides: Partial<JamendoEndpointParameter> = {}): JamendoEndpoi
     in: 'query',
     required: true,
     type: 'string',
+    itemType: null,
     enumValues: null,
     defaultValue: null,
     description: 'A Client Id.',

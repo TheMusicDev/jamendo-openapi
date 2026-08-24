@@ -3,59 +3,79 @@
     "method": "POST",
     "path": "/setuser/fan",
     "authType": "oauth2",
-    "summary": "Make a user become a fan of an artist",
-    "description": "Allows the user identified by `user_id` (derived from the access token) to become a fan of the artist identified by `artist_id`. If the artist does not exist, no error is raised but the fan relationship will not appear in read requests. Requires a valid client_id and OAuth2 access token with the `music` scope.",
-    "parameters": [
+    "summary": "Add a fan relationship between a user and an artist.",
+    "description": "Allows the user identified by `userid` (via a valid `access_token`) to become a fan of the artist identified by `artist_id`. If the artist does not exist the call succeeds silently and no fan relationship is created. Requires both `client_id` and `access_token`. Optional `format` and `fullcount` parameters control response formatting and pagination metadata.",
+    "parameters": [],
+    "requestBody": [
         {
             "name": "client_id",
             "in": "query",
             "required": true,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "A Client Id provided by devportal.jamendo.com"
+            "description": "A Client Id provided by devportal.jamendo.com."
         },
         {
             "name": "format",
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": ["xml", "json", "jsonpretty"],
             "defaultValue": null,
-            "description": "The results formatting type"
+            "description": "The results formatting type."
         },
         {
             "name": "fullcount",
             "in": "query",
             "required": false,
             "type": "boolean",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "If true, adds 'results_fullcount' to the header (performance‑heavy, use only when needed)"
+            "description": "If true, includes the total possible result count in the header (performance impact)."
         },
         {
             "name": "access_token",
             "in": "query",
             "required": true,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "A valid OAuth2 access token (music scope) for the Jamendo user to be updated"
+            "description": "A valid OAuth2 access token with the 'music' scope."
         },
         {
             "name": "artist_id",
             "in": "query",
             "required": true,
             "type": "integer",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "Identifier of the artist to become a fan of"
+            "description": "Identifier of the artist to be followed."
         }
     ],
-    "requestBody": [],
-    "responseFields": [],
+    "responseFields": [
+        {
+            "name": "headers",
+            "type": "object",
+            "nullable": false,
+            "description": "Meta information about the request, including status and result count."
+        },
+        {
+            "name": "results",
+            "type": "array",
+            "nullable": false,
+            "description": "Empty array; fan relationship is created server‑side without returning data."
+        }
+    ],
     "notes": [
-        "If the specified artist does not exist, the request succeeds silently and no fan relationship is created.",
-        "`fullcount` can impact performance and is not available on all heavy methods."
+        "If the specified artist does not exist, the API returns a successful response with an empty results array.",
+        "`client_id` is required even when an `access_token` is provided.",
+        "`format` defaults to JSON if omitted.",
+        "`fullcount` can affect performance and is not available on all heavy methods."
     ]
 }

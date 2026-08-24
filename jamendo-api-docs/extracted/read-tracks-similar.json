@@ -3,32 +3,25 @@
     "method": "GET",
     "path": "/tracks/similar",
     "authType": "apikey",
-    "summary": "Find tracks similar to a given track.",
-    "description": "Returns a list of tracks that are similar to the specified track ID. Similarity is based primarily on tags (genre, instrument, mood, etc.), acoustic/electric characteristics, vocal/instrumental balance, and additional metadata such as artists, language, and gender. Results are sorted by a relevance score (0‑1). The call requires a client_id API key and the track id. Optional parameters let you exclude the original artist or album, control pagination, choose result format, include extra fields, and select audio/audio‑download formats. Note that the 'fullcount' flag can impact performance and 'limit' is capped at 200 rows even when using 'all'.",
+    "summary": "Get tracks similar to a given track",
+    "description": "Returns a list of tracks that are similar to the specified track ID. The similarity is based mainly on tags, then acoustic/electric features and other attributes. Optional filters can exclude tracks by the same artist or album. Results are sorted by a relevance score (0‑1). Pagination, formatting, and additional info can be controlled via query parameters.",
     "parameters": [
         {
             "name": "client_id",
             "in": "query",
             "required": true,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
             "description": "A Client Id provided by devportal.jamendo.com."
         },
         {
-            "name": "id",
-            "in": "query",
-            "required": true,
-            "type": "integer",
-            "enumValues": null,
-            "defaultValue": null,
-            "description": "The id of the track which the returned similar tracks must be similar to."
-        },
-        {
             "name": "format",
             "in": "query",
             "required": false,
-            "type": "string",
+            "type": "enum",
+            "itemType": null,
             "enumValues": ["xml", "json", "jsonpretty"],
             "defaultValue": null,
             "description": "The results formatting type."
@@ -38,15 +31,17 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "Wraps the JSON response in a callback function (JSONP). Only works with json format and GET requests."
+            "description": "Wrap the JSON response in a callback function (JSONP). Only works with format=json or jsonpretty on GET requests."
         },
         {
             "name": "offset",
             "in": "query",
             "required": false,
             "type": "integer",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
             "description": "The position to start returning results from."
@@ -56,24 +51,27 @@
             "in": "query",
             "required": false,
             "type": "string",
+            "itemType": null,
             "enumValues": null,
-            "defaultValue": null,
-            "description": "Maximum number of results to return. Default 10, max 200. The keyword 'all' still caps at 200 rows."
+            "defaultValue": "10",
+            "description": "Maximum number of results to return. Default 10, max 200. The keyword 'all' is capped at 200."
         },
         {
             "name": "fullcount",
             "in": "query",
             "required": false,
             "type": "boolean",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "If true, adds 'results_fullcount' to the header indicating the total number of rows without limit/offset. May affect performance."
+            "description": "If true, includes the total number of matching rows in the header (results_fullcount). May impact performance."
         },
         {
             "name": "imagesize",
             "in": "query",
             "required": false,
-            "type": "string",
+            "type": "enum",
+            "itemType": null,
             "enumValues": [
                 "25",
                 "35",
@@ -94,59 +92,89 @@
                 "600"
             ],
             "defaultValue": null,
-            "description": "Cover image size in pixels. If omitted, a default size is returned."
+            "description": "Desired cover image size in pixels. If omitted, a default size is returned."
         },
         {
             "name": "audioformat",
             "in": "query",
             "required": false,
-            "type": "string",
+            "type": "enum",
+            "itemType": null,
             "enumValues": ["mp31", "mp32", "ogg", "flac"],
-            "defaultValue": null,
-            "description": "Audio format for the 'audio' field. Defaults to mp31 if not specified."
+            "defaultValue": "mp31",
+            "description": "Audio format for the 'audio' field. Defaults to mp31 (96 kbps) if not specified."
         },
         {
             "name": "audiodlformat",
             "in": "query",
             "required": false,
-            "type": "string",
+            "type": "enum",
+            "itemType": null,
             "enumValues": ["mp31", "mp32", "ogg", "flac"],
             "defaultValue": null,
-            "description": "Audio download format for the 'audiodownload' field. Defaults to the value of 'audioformat' or mp32 if neither is set."
+            "description": "Audio download format for the 'audiodownload' field. If omitted, inherits 'audioformat', otherwise defaults to mp32."
         },
         {
             "name": "include",
             "in": "query",
             "required": false,
-            "type": "string",
+            "type": "array",
+            "itemType": "string",
             "enumValues": ["licenses", "musicinfo", "stats", "lyrics"],
             "defaultValue": null,
-            "description": "Comma‑separated list of additional fields to append to the results."
+            "description": "Comma‑separated list of additional fields to include in each result."
+        },
+        {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "itemType": null,
+            "enumValues": null,
+            "defaultValue": null,
+            "description": "The ID of the track for which similar tracks are requested."
         },
         {
             "name": "no_artist",
             "in": "query",
             "required": false,
             "type": "integer",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "Artist ID to exclude from the results."
+            "description": "Artist ID to exclude tracks by this artist from the results."
         },
         {
             "name": "no_album",
             "in": "query",
             "required": false,
             "type": "integer",
+            "itemType": null,
             "enumValues": null,
             "defaultValue": null,
-            "description": "Album ID to exclude from the results."
+            "description": "Album ID to exclude tracks from this album from the results."
         }
     ],
     "requestBody": [],
-    "responseFields": [],
+    "responseFields": [
+        {
+            "name": "headers",
+            "type": "object",
+            "nullable": false,
+            "description": "Metadata about the request, including status, code, warnings, and results_count."
+        },
+        {
+            "name": "results",
+            "type": "array",
+            "nullable": false,
+            "description": "Array of similar track objects. Each object contains fields such as id, name, artist_name, score, and optional included data."
+        }
+    ],
     "notes": [
-        "The 'callback' parameter is ignored for non‑JSON formats or non‑GET requests.",
-        "'fullcount' is not available on some heavy methods due to performance considerations.",
-        "Even when 'limit=all' is used, the maximum number of returned rows is capped at 200."
+        "Both client_id and id parameters are mandatory.",
+        "The 'no_artist' and 'no_album' filters are useful to avoid returning tracks from the same artist or album.",
+        "The maximum effective limit is 200 even when using the 'all' keyword.",
+        "The 'include' parameter accepts multiple comma‑separated values; each adds extra fields to each track object.",
+        "If 'audiodlformat' is omitted, it follows the value of 'audioformat'; if both are omitted, default download format is mp32."
     ]
 }
